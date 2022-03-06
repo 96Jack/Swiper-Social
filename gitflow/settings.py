@@ -26,7 +26,7 @@ SECRET_KEY = '-t6&ay%d3k4v6-)k9!c7_ya%kf8#)r!er#smtz^&=mfd5$1t2m'
 DEBUG = True
 
 # 允许所有人访问
-ALLOWED_HOSTS = [*]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.staticfiles',
+    'like',
+    'follow',
 ]
 
 MIDDLEWARE = [
