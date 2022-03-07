@@ -31,6 +31,7 @@ class User(models.Model):
     location      = models.CharField( max_length=20, choices=LOCATION, verbose_name="常居地         ")
              
 
-
+    def to_dict(self):
+        return 
 
 

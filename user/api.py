@@ -1,7 +1,15 @@
-from socket import J1939_EE_INFO_NONE
 from django.http import JsonResponse
 from django.shortcuts import render
+from django.core.cache import cache
+
+from common import keys
 from user import logics
+from common import stat
+from models import User
+
+
+
+
 
 
 # Create your views here.
@@ -19,15 +27,31 @@ def get_vcode(request):
     phonenum = request.GET.get('phonenum')
 
     # 发送验证码，并检查是否发送成功
-
     if logics.send_vcode(phonenum):
-        return JsonResponse({'code':0, 'data':None})
+        return JsonResponse({'code':stat.OK, 'data':None})
     else:
-        return JsonResponse({'code':1000, 'data':None})
+        return JsonResponse({'code':stat.VCODE_ERR, 'data':None})
     
     
     
 
 def check_vcode(request):
     """进行验证,并且登录验证"""
-    ...
+    phonenum = request.POST.get('phonenum')
+    vcode = request.POST.get('vcode')
+    cached_vcode = cache.get(keys.VCODE_KEY % phonenum)
+    if  vcode and cached_vcode and vcode == cached_vcode:
+        # 取出用户
+        try:
+            user = User.objects.get(phonenum=phonenum)
+        except User.DoesNotExist:
+            # 如果用户不存在，直接创建用户
+            user = User.objects.create(
+                phonenum=phonenum,
+                nickname=phonenum
+            )
+        request.session['uid'] = user.id
+        # 传入的数据可以被JsonResponse序列化
+        return JsonResponse({'code': stat.OK, 'data': None})
+    else:
+        return JsonResponse({'code':stat.INVILD_VCODE, 'data':None})
