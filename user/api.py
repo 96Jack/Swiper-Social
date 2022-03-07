@@ -1,4 +1,8 @@
+from socket import J1939_EE_INFO_NONE
+from django.http import JsonResponse
 from django.shortcuts import render
+from user import logics
+
 
 # Create your views here.
 
@@ -13,8 +17,15 @@ def get_vcode(request):
     # 请求的源信息：header内：request.META['HTTP_USER_AGENT'] WSGI规定
 
     phonenum = request.GET.get('phonenum')
-    # 发送验证码
-    ...
+
+    # 发送验证码，并检查是否发送成功
+
+    if logics.send_vcode(phonenum):
+        return JsonResponse({'code':0, 'data':None})
+    else:
+        return JsonResponse({'code':1000, 'data':None})
+    
+    
     
 
 def check_vcode(request):
