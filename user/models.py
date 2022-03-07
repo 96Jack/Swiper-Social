@@ -25,7 +25,7 @@ class User(models.Model):
     sex           = models.CharField(max_length=8, choices=SEX, verbose_name="性别  ")
     # birth_year    = models.CharField( verbose_name="出⽣年")
     # birth_month   = models.CharField( verbose_name="出⽣⽉    ")
-    birth_day     = models.CharField(max_length=8, default='1990-1-1', verbose_name="出⽣⽇    ")
+    birth_day     = models.DateField(max_length=8, default='1990-1-1', verbose_name="出⽣⽇    ")
     # 形象介绍的内容较多，一般存在服务器，给网址
     avatar        = models.CharField( max_length=256, verbose_name="个⼈形象   ")
     location      = models.CharField( max_length=20, choices=LOCATION, verbose_name="常居地         ")
