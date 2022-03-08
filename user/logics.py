@@ -24,10 +24,12 @@ def send_vcode(phone):
     sms_args['param'] = vcode
     sms_args['mobile'] = phone
     response = requests.post(cfg.YZX_API, json=sms_args)
-
+    
+    print("status_code:",response.status_code)
     # 检查最终的返回值
     if response.status_code == 200:
         result = response.json()
+        print("YZX_result_code",result['code'])
         if result['code'] == '000000':
             return True 
     return False
