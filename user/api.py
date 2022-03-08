@@ -4,8 +4,9 @@ from django.core.cache import cache
 
 from common import keys
 from user import logics
+from user import models
 from common import stat
-from models import User
+from user.models import User
 
 
 
@@ -52,6 +53,6 @@ def check_vcode(request):
             )
         request.session['uid'] = user.id
         # 传入的数据可以被JsonResponse序列化
-        return JsonResponse({'code': stat.OK, 'data': None})
+        return JsonResponse({'code': stat.OK, 'data': user.to_dict()})
     else:
         return JsonResponse({'code':stat.INVILD_VCODE, 'data':None})

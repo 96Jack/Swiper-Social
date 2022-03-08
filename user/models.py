@@ -32,6 +32,14 @@ class User(models.Model):
              
 
     def to_dict(self):
-        return 
+        return {
+             "phonenum "     : self.phonenum,
+             "nickname "     : self.nickname,
+             "sex      "     : self.sex,
+             # 将datetime.date 类型转换成str
+             "birth_day"     : str(self.birth_day),
+             "avatar   "     : self.avatar,
+             "location "     : self.location,
+}
 
 
