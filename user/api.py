@@ -1,12 +1,12 @@
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.core.cache import cache
 
 from common import keys
 from user import logics
-from user import models
 from common import stat
 from user.models import User
+from swiper import cfg
 
 
 
@@ -52,7 +52,18 @@ def check_vcode(request):
                 nickname=phonenum
             )
         request.session['uid'] = user.id
-        # 传入的数据可以被JsonResponse序列化
+        # 传入的数据可以被JsonResponse序列化,code:状态码，data:返回的数据
+        # 实例对象user
         return JsonResponse({'code': stat.OK, 'data': user.to_dict()})
     else:
         return JsonResponse({'code':stat.INVILD_VCODE, 'data':None})
+
+def wb_auth(request):
+    """用户授权页"""
+    return redirect(cfg.WB_AUTH_URL)
+
+def callback(request):
+    """""""""微博回调"""
+
+    ...
+

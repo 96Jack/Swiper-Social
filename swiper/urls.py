@@ -20,4 +20,7 @@ from user import api as user_api
 urlpatterns = [
     url(r'^api/user/get_vcode', user_api.get_vcode),
     url(r'^api/user/check_vcode', user_api.check_vcode),
+
+    url(r'^weibo/wb_auth', user_api.wb_auth),
+    url(r'^weibo/callback', user_api.callback),
 ]

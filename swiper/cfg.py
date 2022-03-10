@@ -1,6 +1,9 @@
 """程序逻辑配置个第三方平台配置: 相当于全局变量"""
 
 
+from email.policy import default
+
+
 YZX_API = "https://open.ucpaas.com/ol/sms/sendsms"
 YZX_ARGS = {
         "sid":"b8986f9d2717e385ac5f705b1ffec443",
@@ -10,3 +13,24 @@ YZX_ARGS = {
         "param":"None",
         "mobile":"None",
 }
+
+from urllib.parse import urljoin, urlencode
+# 微博配置
+# ex: https://api.weibo.com/oauth2/authorize?client_id=123050457758183&redirect_uri=
+# http://www.example.com/response&response_type=code
+WB_APP_KEY = "3474883573"
+WB_APP_SECRET = "c61135248ab7f3a30e121f95c0e68dfe"
+WB_CALLBACK = "http://123.57.232.108:8000/weibo/callback"
+
+# 第一步： Authorize 接口
+
+WB_AUTH_API = 'https://api.weibo.com/oauth2/authorize'
+WB_AUTH_ARGS = {
+        'client_id': WB_APP_KEY,
+        'redirect_uri': WB_CALLBACK,
+        'display':default,
+}
+# 转译&；用？拼接url
+WB_AUTH_URL = '%s?%s' % (WB_AUTH_API, urlencode(WB_AUTH_ARGS))
+print('WB_AUTH_URL :{}'.format(WB_AUTH_URL))
+
