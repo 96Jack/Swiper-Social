@@ -43,3 +43,9 @@ WB_ACCESS_TOKEN_ARGS = {
         'redirect_uri':WB_CALLBACK,
         'code' : None 
 }
+# 获取用户信息
+WB_USER_SHOW_API = 'https://api.weibo.com/2/users/show.json'
+WB_USER_SHOW_ARGS = {
+        'access_token' : None,
+        'uid':None
+}

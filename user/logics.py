@@ -74,3 +74,21 @@ def get_access_token(code):
         return access_token, wb_uid
     return None, None
     
+def get_user_info(access_token, wb_uid):
+    args = cfg.WB_ACCESS_TOKEN_ARGS.copy()
+    args['access_token'] = access_token
+    args['id'] = wb_uid
+    response = requests.get(cfg.WB_USER_SHOW_API,params=args)
+    # 检查返回值
+    if response.status_code == 200:
+        result = response.json()
+        user_info = {
+            'phonenum':    'WB_%s' % wb_uid,
+            'nickname':    result['screen_name'],
+            'sex'     :    'female' if result['gender'] == 'f' else 'male',
+            'avatar'  :    result['avatar_hd'],
+            'location':    result['location'].split(' ')[0],
+        }
+        return user_info
+    return None
+    

@@ -1,3 +1,4 @@
+from os import access
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.core.cache import cache
@@ -65,8 +66,23 @@ def wb_auth(request):
 def callback(request):
     """"微博回调接口"""
     code = request.GET.get('code')
+    # 获取授权令牌
     print("access_code",code)
     access_token, wb_uid = logics.get_access_token(code)
-    return JsonResponse({'access_token': access_token, 'wb_uod':wb_uid})
+    if not access_token:
+        return JsonResponse({'code': stat.ACCESS_TOKEN_ERR , 'data':None })
+
+    #获取用户信息
+    user_info = logics.get_user_info(access_token, wb_uid)
+    if not user_info:
+        return JsonResponse({'code': stat.USER_INFO_ERR , 'data':None })
+
+    # 执行登录或注册
+    try:
+        user = User.objects.get(phonenum=user_info['phonenum'])
+    except User.DoseNotExist:
+        user = User.objects.create(**user_info)
+    request.session['uid'] = user.id
+    return JsonResponse({'code': stat.OK, 'data': user.to_dict()})
     
 
