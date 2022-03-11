@@ -1,3 +1,7 @@
+
+
+from cgitb import reset
+from urllib import response
 from django.core.cache import cache
 import requests
 import random
@@ -14,6 +18,18 @@ def gen_randcode(length: int) -> str:
 
 
 def send_vcode(phone):
+    """
+    指定模板单发
+    {
+   "code":"0",
+   "msg":"OK", 
+   "count":"1",
+   "create_date":"2017-08-28 19:08:28",
+   "smsid":"f96f79240e372587e9284cd580d8f953",
+   "mobile":"18011984299",
+   "uid":"2d92c6132139467b989d087c84a365d8"
+    }
+    """
     vcode = gen_randcode(6)
     # 将验证码设置在缓存中，并设置过期时间180s
     cache.set(keys.VCODE_KEY % phone, vcode, 180)
@@ -35,3 +51,26 @@ def send_vcode(phone):
     return False
 
 
+def get_access_token(code):
+    """
+    token返回的数据类型:
+    {
+       "access_token": "ACCESS_TOKEN",
+       "expires_in": 1234,
+       "remind_in":"798114",
+       "uid":"12341234"
+    }
+    """
+    args = cfg.WB_ACCESS_TOKEN_ARGS.copy()
+    args['code'] = code
+    response = requests.post(cfg.WB_ACCESS_TOKEN_API, data=args)
+    print("response.status_code:",response.status_code)
+     # 检查最终的返回值
+    if response.status_code == 200:
+        result = response.json()
+        print("ACCESS_token_status_code:=====================",result)
+        access_token = result['access_token']
+        wb_uid = result['uid']
+        return access_token, wb_uid
+    return None, None
+    

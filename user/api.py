@@ -63,7 +63,10 @@ def wb_auth(request):
     return redirect(cfg.WB_AUTH_URL)
 
 def callback(request):
-    """""""""微博回调"""
-
-    ...
+    """"微博回调接口"""
+    code = request.GET.get('code')
+    print("access_code",code)
+    access_token, wb_uid = logics.get_access_token(code)
+    return JsonResponse({'access_token': access_token, 'wb_uod':wb_uid})
+    
 

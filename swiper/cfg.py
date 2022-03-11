@@ -14,7 +14,7 @@ YZX_ARGS = {
         "mobile":"None",
 }
 
-from urllib.parse import urljoin, urlencode
+from urllib.parse import urlencode
 # 微博配置
 # ex: https://api.weibo.com/oauth2/authorize?client_id=123050457758183&redirect_uri=
 # http://www.example.com/response&response_type=code
@@ -22,7 +22,7 @@ WB_APP_KEY = "3474883573"
 WB_APP_SECRET = "c61135248ab7f3a30e121f95c0e68dfe"
 WB_CALLBACK = "http://123.57.232.108:8000/weibo/callback"
 
-# 第一步： Authorize 接口
+# 第一步： Authorize 接口：第三方登录微博
 
 WB_AUTH_API = 'https://api.weibo.com/oauth2/authorize'
 WB_AUTH_ARGS = {
@@ -32,5 +32,14 @@ WB_AUTH_ARGS = {
 }
 # 转译&；用？拼接url
 WB_AUTH_URL = '%s?%s' % (WB_AUTH_API, urlencode(WB_AUTH_ARGS))
-print('WB_AUTH_URL :{}'.format(WB_AUTH_URL))
+print('+++++++WB_AUTH_URL :{}'.format(WB_AUTH_URL))
 
+# 第二步access_token 接口： 获取微博服务器用户信息
+WB_ACCESS_TOKEN_API = 'https://api.weibo.com/oauth2/access_token'
+WB_ACCESS_TOKEN_ARGS = {
+        'client_id': WB_APP_KEY,
+        'client_secret': WB_APP_SECRET,
+        'grant_type' : 'authorization_code',
+        'redirect_uri':WB_CALLBACK,
+        'code' : None 
+}
