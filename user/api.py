@@ -74,13 +74,14 @@ def callback(request):
 
     #获取用户信息
     user_info = logics.get_user_info(access_token, wb_uid)
+    print("user_info:+++++++++",user_info)
     if not user_info:
         return JsonResponse({'code': stat.USER_INFO_ERR , 'data':None })
 
     # 执行登录或注册
     try:
         user = User.objects.get(phonenum=user_info['phonenum'])
-    except User.DoseNotExist:
+    except User.DoesNotExist:
         user = User.objects.create(**user_info)
     request.session['uid'] = user.id
     return JsonResponse({'code': stat.OK, 'data': user.to_dict()})

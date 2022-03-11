@@ -75,13 +75,15 @@ def get_access_token(code):
     return None, None
     
 def get_user_info(access_token, wb_uid):
-    args = cfg.WB_ACCESS_TOKEN_ARGS.copy()
+    args = cfg.WB_USER_SHOW_ARGS.copy()
     args['access_token'] = access_token
-    args['id'] = wb_uid
+    args['uid'] = wb_uid
+    print('args========>:',args)
     response = requests.get(cfg.WB_USER_SHOW_API,params=args)
     # 检查返回值
     if response.status_code == 200:
         result = response.json()
+        print("get_user_info_result:=========>",result)
         user_info = {
             'phonenum':    'WB_%s' % wb_uid,
             'nickname':    result['screen_name'],
@@ -91,4 +93,3 @@ def get_user_info(access_token, wb_uid):
         }
         return user_info
     return None
-    
