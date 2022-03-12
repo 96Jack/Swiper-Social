@@ -87,6 +87,7 @@ def get_user_info(access_token, wb_uid):
         user_info = {
             'phonenum':    'WB_%s' % wb_uid,
             'nickname':    result['screen_name'],
+            # 三元运算
             'sex'     :    'female' if result['gender'] == 'f' else 'male',
             'avatar'  :    result['avatar_hd'],
             'location':    result['location'].split(' ')[0],
