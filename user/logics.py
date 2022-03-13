@@ -94,3 +94,5 @@ def get_user_info(access_token, wb_uid):
         }
         return user_info
     return None
+
+

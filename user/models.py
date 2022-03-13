@@ -1,3 +1,4 @@
+from email.policy import default
 from random import choices
 from telnetlib import SE
 from django.db import models
@@ -30,6 +31,19 @@ class User(models.Model):
     avatar        = models.CharField( max_length=256, verbose_name="个⼈形象   ")
     location      = models.CharField( max_length=20, choices=LOCATION, verbose_name="常居地         ")
              
+    '''
+    User 和 Profile 之间是一对一的关系
+    1.通过id绑定User和Profile两表之间的关系,不使用外键,性能太差
+    2.将获取用户资料的函数profile属性化,可以通过实例名来调用
+    3.get_or_create()先获取,若获取不到则创建
+    4.将获取的用户资料绑定在实例身上,避免每次获取用户资料都要去数据库获取数据,性能不好
+    '''
+    @property
+    def profile(self):
+        if not hasattr(self, '_profile'):
+            self._profile, _ = Profile.objects.get_or_create(id=self.id)
+        return self._profile
+
 
     def to_dict(self):
         return {
@@ -41,5 +55,21 @@ class User(models.Model):
              "avatar   "     : self.avatar,
              "location "     : self.location,
 }
+
+
+class Profile(models.Model):
+    '''交友资料'''
+
+    dating_sex        = models.CharField(max_length=8, choices=User.SEX, verbose_name='匹配的性别'  )
+    dating_location   = models.CharField(max_length=20, choices=User.LOCATION, verbose_name= '⽬标城市'   )
+    min_dating_age    = models.IntegerField(default=18, verbose_name='最⼩交友年龄'  )
+    max_dating_age    = models.IntegerField(default=50,  verbose_name='最⼤交友年龄' )
+    min_distance      = models.IntegerField(default=1,  verbose_name='最⼩查找范围'  )
+    max_distance      = models.IntegerField(default=30,  verbose_name='最⼤查找范围' )
+
+    vibration         = models.BooleanField(default=True,  verbose_name='开启震动')
+    only_matche       = models.BooleanField(default=True,  verbose_name='只让匹配的⼈看我的相册')
+    auto_play         = models.BooleanField(default=True,  verbose_name='⾃动播放视频')
+
 
 

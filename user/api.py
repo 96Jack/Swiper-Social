@@ -87,3 +87,14 @@ def callback(request):
     return JsonResponse({'code': stat.OK, 'data': user.to_dict()})
     
 
+def get_profile(request):
+    '''获取个人资料'''
+    return JsonResponse({})
+
+def set_profile(requst):
+    '''修改个人资料'''
+    return JsonResponse({})
+
+def upload_avatar(requrst):
+    '''上传个人形象'''
+    return JsonResponse({})
