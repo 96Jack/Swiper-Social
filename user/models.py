@@ -1,6 +1,4 @@
-from email.policy import default
 from random import choices
-from telnetlib import SE
 from django.db import models
 
 # Create your models here.
@@ -32,7 +30,7 @@ class User(models.Model):
     location      = models.CharField( max_length=20, choices=LOCATION, verbose_name="常居地         ")
              
     '''
-    User 和 Profile 之间是一对一的关系
+    User 和 Profile 之间是一对一的关系:不使用外键构建一对一表关系
     1.通过id绑定User和Profile两表之间的关系,不使用外键,性能太差
     2.将获取用户资料的函数profile属性化,可以通过实例名来调用
     3.get_or_create()先获取,若获取不到则创建
@@ -47,6 +45,7 @@ class User(models.Model):
 
     def to_dict(self):
         return {
+             "id"            : self.id,
              "phonenum "     : self.phonenum,
              "nickname "     : self.nickname,
              "sex      "     : self.sex,
@@ -66,10 +65,24 @@ class Profile(models.Model):
     max_dating_age    = models.IntegerField(default=50,  verbose_name='最⼤交友年龄' )
     min_distance      = models.IntegerField(default=1,  verbose_name='最⼩查找范围'  )
     max_distance      = models.IntegerField(default=30,  verbose_name='最⼤查找范围' )
-
     vibration         = models.BooleanField(default=True,  verbose_name='开启震动')
     only_matche       = models.BooleanField(default=True,  verbose_name='只让匹配的⼈看我的相册')
     auto_play         = models.BooleanField(default=True,  verbose_name='⾃动播放视频')
 
+    def to_dict(self):
+        return {
+            "id"                :    self.id   , 
+            "dating_sex"        :    self.dating_sex   ,         
+            "dating_location"   :    self.dating_location ,                
+            "min_dating_age"    :    self.min_dating_age ,               
+            "max_dating_age"    :    self.max_dating_age ,               
+            "min_distance"      :    self.min_distance  ,            
+            "max_distance"      :    self.max_distance  ,            
+            "vibration"         :    self.vibration     ,      
+            "only_matche"       :    self.only_matche   ,          
+            "auto_play"         :    self.auto_play     ,      
+
+
+        }
 
 

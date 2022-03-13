@@ -1,6 +1,5 @@
-from os import access
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import  redirect
 from django.core.cache import cache
 
 from common import keys
@@ -89,7 +88,10 @@ def callback(request):
 
 def get_profile(request):
     '''获取个人资料'''
-    return JsonResponse({})
+    # 中间件+@property+用户资料绑定在实例上
+    profile_data = request.user.profile.to_dict()
+
+    return JsonResponse({'code': stat.OK, 'data':profile_data})
 
 def set_profile(requst):
     '''修改个人资料'''
