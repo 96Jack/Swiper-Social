@@ -22,7 +22,6 @@ urlpatterns = [
     url(r'^api/user/get_profile', user_api.get_profile),
     url(r'^api/user/set_profile', user_api.set_profile),
     url(r'^api/user/upload_avatar', user_api.upload_avatar),
-
     url(r'^weibo/wb_auth', user_api.wb_auth),
     url(r'^weibo/callback', user_api.callback),
 ]
