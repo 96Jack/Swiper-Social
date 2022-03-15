@@ -11,8 +11,8 @@ class UserForm(forms.ModelForm):
 class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
-        # fields = '__all__'
-        fields = ['dating_sex','dating_location','min_dating_age','max_dating_age','min_distance','max_distance','vibration','only_matche','auto_play',]
+        fields = '__all__'
+        # fields = ['dating_sex','dating_location','min_dating_age','max_dating_age','min_distance','max_distance','vibration','only_matche','auto_play',]
 
     # 以此种方式命名比较字段函数 def clean_<field_name>
     def clean_max_dating_age(self):
