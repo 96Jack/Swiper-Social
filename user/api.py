@@ -8,7 +8,7 @@ from common import stat
 from user.froms import ProfileForm, UserForm
 from user.models import User
 from swiper import cfg
-
+from libs.http import render_json
 
 
 
@@ -30,9 +30,9 @@ def get_vcode(request):
 
     # 发送验证码，并检查是否发送成功
     if logics.send_vcode(phonenum):
-        return JsonResponse({'code':stat.OK, 'data':None})
+        return render_json()
     else:
-        return JsonResponse({'code':stat.VCODE_ERR, 'data':None})
+        return render_json(code=stat.VCODE_ERR)
     
     
     
@@ -54,11 +54,11 @@ def check_vcode(request):
                 nickname=phonenum
             )
         request.session['uid'] = user.id
-        # 传入的数据可以被JsonResponse序列化,code:状态码，data:返回的数据
+        # 传入的数据可以被render_json序列化,code:状态码，data:返回的数据
         # 实例对象user
-        return JsonResponse({'code': stat.OK, 'data': user.to_dict()})
+        return render_json(code=stat.OK, data=user.to_dict())
     else:
-        return JsonResponse({'code':stat.INVILD_VCODE, 'data':None})
+        return render_json(code=stat.INVILD_VCODE)
 
 def wb_auth(request):
     """用户授权页"""
@@ -71,13 +71,13 @@ def callback(request):
     # print("access_code",code)
     access_token, wb_uid = logics.get_access_token(code)
     if not access_token:
-        return JsonResponse({'code': stat.ACCESS_TOKEN_ERR , 'data':None })
+        return render_json(code=stat.ACCESS_TOKEN_ERR )
 
     #获取用户信息
     user_info = logics.get_user_info(access_token, wb_uid)
     print("user_info:+++++++++",user_info)
     if not user_info:
-        return JsonResponse({'code': stat.USER_INFO_ERR , 'data':None })
+        return render_json(code=stat.USER_INFO_ERR)
 
     # 执行登录或注册
     try:
@@ -85,7 +85,7 @@ def callback(request):
     except User.DoesNotExist:
         user = User.objects.create(**user_info)
     request.session['uid'] = user.id
-    return JsonResponse({'code': stat.OK, 'data': user.to_dict()})
+    return render_json(code=stat.OK, data=user.to_dict())
     
 
 def get_profile(request):
@@ -93,7 +93,7 @@ def get_profile(request):
     # 中间件+@property+用户资料绑定在实例上
     profile_data = request.user.profile.to_dict()
 
-    return JsonResponse({'code': stat.OK, 'data':profile_data})
+    return render_json(code=stat.OK, data=profile_data)
 
 def set_profile(request):
     """修改个人资料"""
@@ -101,14 +101,14 @@ def set_profile(request):
     profile_form = ProfileForm(request.POST)
 
    
-    # 检查User数据,is_valid:当含有不合规的字段时是True,含不合规的字段时是False
+    # 检查User数据,is_valid:当不含有不合规的字段时是True,含不合规的字段时是False
     # 不合规的字段保存在user_form.errors里面
     if not user_form.is_valid():
-        return JsonResponse({'code':stat.USER_DATA_ERROR, 'data':user_form.errors})
+        return render_json(code=stat.USER_DATA_ERROR, data=user_form.errors)
 
     # 检查Profile数据
     if not profile_form.is_valid():
-        return JsonResponse({'code':stat.PROFILE_DATA_ERROR, 'data':profile_form.errors})
+        return render_json(code=stat.PROFILE_DATA_ERROR, data=profile_form.errors)
     
     #实例化绑定在request上的用户
     user = request.user
@@ -122,8 +122,8 @@ def set_profile(request):
     # user.profile.__dict__.update(profile_form.cleaned_data)
     # user.profile.save()
 
-    return JsonResponse({'code':0, 'data':None})
+    return render_json()
 
 def upload_avatar(requrst):
     '''上传个人形象'''
-    return JsonResponse({})
+    return render_json()

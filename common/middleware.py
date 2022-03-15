@@ -8,7 +8,6 @@ version    :python3.7.8
 '''
 
 
-from urllib import request
 from django.utils.deprecation import MiddlewareMixin
 from django.http import JsonResponse
 
