@@ -75,7 +75,7 @@ class Profile(models.Model):
             "dating_sex"        :    self.dating_sex   ,         
             "dating_location"   :    self.dating_location ,                
             "min_dating_age"    :    self.min_dating_age ,               
-            "max_dating_age"    :    self.max_dating_age ,               
+            "max_dating_age"    :    self.max_dating_age ,              
             "min_distance"      :    self.min_distance  ,            
             "max_distance"      :    self.max_distance  ,            
             "vibration"         :    self.vibration     ,      

@@ -34,6 +34,7 @@ def send_vcode(phone):
     # 将验证码设置在缓存中，并设置过期时间180s
     cache.set(keys.VCODE_KEY % phone, vcode, 180)
     print("验证码: ", vcode)
+    print("cached_vcode:",cache.get(keys.VCODE_KEY % phone))
     
     # 设计模式之原型模式：不修改公共配置信息
     sms_args = cfg.YZX_ARGS.copy()
@@ -41,12 +42,14 @@ def send_vcode(phone):
     sms_args['mobile'] = phone
     response = requests.post(cfg.YZX_API, json=sms_args)
     
-    print("status_code:",response.status_code)
+    # print("status_code:",response.status_code)
     # 检查最终的返回值
     if response.status_code == 200:
         result = response.json()
-        print("YZX_result_code",result['code'])
-        if result['code'] == '000000':
+        # print("YZX_result_code",result['code'])
+        # 云资讯平台未认证
+        if result['code'] == '105140':
+        # if result['code'] == '000000':
             return True 
     return False
 
@@ -68,7 +71,7 @@ def get_access_token(code):
      # 检查最终的返回值
     if response.status_code == 200:
         result = response.json()
-        print("ACCESS_token_status_code:=====================",result)
+        # print("ACCESS_token_status_code:=====================",result)
         access_token = result['access_token']
         wb_uid = result['uid']
         return access_token, wb_uid
@@ -78,12 +81,12 @@ def get_user_info(access_token, wb_uid):
     args = cfg.WB_USER_SHOW_ARGS.copy()
     args['access_token'] = access_token
     args['uid'] = wb_uid
-    print('args========>:',args)
+    # print('args========>:',args)
     response = requests.get(cfg.WB_USER_SHOW_API,params=args)
     # 检查返回值
     if response.status_code == 200:
         result = response.json()
-        print("get_user_info_result:=========>",result)
+        # print("get_user_info_result:=========>",result)
         user_info = {
             'phonenum':    'WB_%s' % wb_uid,
             'nickname':    result['screen_name'],

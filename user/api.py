@@ -5,6 +5,7 @@ from django.core.cache import cache
 from common import keys
 from user import logics
 from common import stat
+from user.froms import ProfileForm, UserForm
 from user.models import User
 from swiper import cfg
 
@@ -41,6 +42,7 @@ def check_vcode(request):
     phonenum = request.POST.get('phonenum')
     vcode = request.POST.get('vcode')
     cached_vcode = cache.get(keys.VCODE_KEY % phonenum)
+    # print("=====================\n vcode:{}\n, cache_vcode:{}\n".format(vcode, cached_vcode))
     if  vcode and cached_vcode and vcode == cached_vcode:
         # 取出用户
         try:
@@ -66,7 +68,7 @@ def callback(request):
     """"微博回调接口"""
     code = request.GET.get('code')
     # 获取授权令牌
-    print("access_code",code)
+    # print("access_code",code)
     access_token, wb_uid = logics.get_access_token(code)
     if not access_token:
         return JsonResponse({'code': stat.ACCESS_TOKEN_ERR , 'data':None })
@@ -93,9 +95,34 @@ def get_profile(request):
 
     return JsonResponse({'code': stat.OK, 'data':profile_data})
 
-def set_profile(requst):
-    '''修改个人资料'''
-    return JsonResponse({})
+def set_profile(request):
+    """修改个人资料"""
+    user_form = UserForm(request.POST)
+    profile_form = ProfileForm(request.POST)
+
+   
+    # 检查User数据,is_valid:当含有不合规的字段时是True,含不合规的字段时是False
+    # 不合规的字段保存在user_form.errors里面
+    if not user_form.is_valid():
+        return JsonResponse({'code':stat.USER_DATA_ERROR, 'data':user_form.errors})
+
+    # 检查Profile数据
+    if not profile_form.is_valid():
+        return JsonResponse({'code':stat.PROFILE_DATA_ERROR, 'data':profile_form.errors})
+    
+    #实例化绑定在request上的用户
+    user = request.user
+    # 保存用户数据，表单的所有数据保存在cleaned_data 里面
+    user.__dict__.update(user_form.cleaned_data)
+    user.save()
+
+    # 保存交友资料数据
+    user.profile.__dict__.update(profile_form.cleaned_data)
+    user.profile.save()
+    # user.profile.__dict__.update(profile_form.cleaned_data)
+    # user.profile.save()
+
+    return JsonResponse({'code':0, 'data':None})
 
 def upload_avatar(requrst):
     '''上传个人形象'''
