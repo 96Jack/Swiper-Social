@@ -98,4 +98,16 @@ def get_user_info(access_token, wb_uid):
         return user_info
     return None
 
+def save_upload_avatar(user, upload_avatar):
+    '''保存上传的头像'''
+    print(user.id)
+    filename = 'Avatar-%s' % user.id
+    filepath = '/tmp/%s' % filename
+
+    with open(filepath, 'wb') as fp:
+        for chunk in upload_avatar.chunks():
+            fp.write(chunk)
+
+    return filename, filepath
+
 

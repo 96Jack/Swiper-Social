@@ -1,8 +1,10 @@
+import os
 from django.http import JsonResponse
 from django.shortcuts import  redirect
 from django.core.cache import cache
 
 from common import keys
+from libs.qn_cloud import upload_to_qn
 from user import logics
 from common import stat
 from user.froms import ProfileForm, UserForm
@@ -124,6 +126,21 @@ def set_profile(request):
 
     return render_json()
 
-def upload_avatar(requrst):
+def upload_avatar(request):
     '''上传个人形象'''
+
+    avatar = request.FILES.get('avatar')
+    filename, filepath = logics.save_upload_avatar(request.user, avatar)
+    print('filename:',filename)
+    print('filepath:',filepath)
+    # # 将文件上传到七牛云
+    # avatar_url = upload_to_qn(filename, filepath)
+
+    # # 保存avatar_url
+    # request.user.avatar = avatar_url
+    # request.save()
+
+    #删除临时文件
+    os.remove(filepath)
+
     return render_json()

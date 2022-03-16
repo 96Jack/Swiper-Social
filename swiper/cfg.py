@@ -4,6 +4,16 @@
 from email.policy import default
 from urllib.parse import urlencode
 
+
+# 七牛云配置
+QN_ACCESS_KEY = 'uQeKv_jRYUP8iz1g3uTv5LSwCSxIjysgUdwtv3Pt'
+QN_SECRET_KEY = 'qZaNECJFH-3L2mNB7NHVlNFNDSz5R5ScaGKSZuCd'
+QN_BASE_URL = 'http://py4hx1gc8.bkt.clouddn.com'
+QN_BUCKET = 'th-test'
+
+
+
+
 YZX_API = "https://open.ucpaas.com/ol/sms/sendsms"
 YZX_ARGS = {
         "sid":"b8986f9d2717e385ac5f705b1ffec443",

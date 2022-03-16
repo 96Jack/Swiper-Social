@@ -22,4 +22,4 @@ def render_json(data=None, code=OK):
     else:
         json_result = json.dumps(result, ensure_ascii=False, separators=(',',':'))
     
-    return HttpResponse(json_result)
+    return HttpResponse(json_result) 
