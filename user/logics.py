@@ -1,4 +1,4 @@
-
+import os
 
 from cgitb import reset
 from urllib import response
@@ -7,7 +7,7 @@ import requests
 import random
 from common import keys
 from swiper import cfg
-
+from tasks import celery_app
 
 def gen_randcode(length: int) -> str:
     """产生出指定长度的随机码"""
@@ -110,4 +110,18 @@ def save_upload_avatar(user, upload_avatar):
 
     return filename, filepath
 
+@celery_app.task
+def handle_avatar(user, upload_avatar):
+    '''上传个人形象'''
+    # 文件保存到本地
+    filename, filepath = save_upload_avatar(user, upload_avatar)
+    print('filename:{}\n, filepath:{}\n'.format(filename, filepath))
+    # # 将文件上传到七牛云
+    # avatar_url = upload_to_qn(filename, filepath)
 
+    # # 保存avatar_url
+    # request.user.avatar = avatar_url
+    # request.save()
+
+    #删除临时文件
+    # os.remove(filepath)

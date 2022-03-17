@@ -1,3 +1,4 @@
+import encodings
 import json
 
 from django.http import HttpResponse

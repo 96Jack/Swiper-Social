@@ -1,8 +1,12 @@
+# 标准库
 import os
+
+# 第三方库
 from django.http import JsonResponse
 from django.shortcuts import  redirect
 from django.core.cache import cache
 
+# 自定义的库
 from common import keys
 from libs.qn_cloud import upload_to_qn
 from user import logics
@@ -11,6 +15,7 @@ from user.froms import ProfileForm, UserForm
 from user.models import User
 from swiper import cfg
 from libs.http import render_json
+from user.logics import save_upload_avatar
 
 
 
@@ -95,7 +100,7 @@ def get_profile(request):
     # 中间件+@property+用户资料绑定在实例上
     profile_data = request.user.profile.to_dict()
 
-    return render_json(code=stat.OK, data=profile_data)
+    return render_json(data=profile_data)
 
 def set_profile(request):
     """修改个人资料"""
@@ -130,17 +135,7 @@ def upload_avatar(request):
     '''上传个人形象'''
 
     avatar = request.FILES.get('avatar')
-    filename, filepath = logics.save_upload_avatar(request.user, avatar)
-    print('filename:',filename)
-    print('filepath:',filepath)
-    # # 将文件上传到七牛云
-    # avatar_url = upload_to_qn(filename, filepath)
-
-    # # 保存avatar_url
-    # request.user.avatar = avatar_url
-    # request.save()
-
-    #删除临时文件
-    os.remove(filepath)
-
+    
+    # 调用celery异步处理图像上传
+    logics.handle_avatar.delay(request.user, avatar)
     return render_json()
