@@ -117,7 +117,7 @@ def handle_avatar(user, upload_avatar):
     filename, filepath = save_upload_avatar(user, upload_avatar)
     print('filename:{}\n, filepath:{}\n'.format(filename, filepath))
     # # 将文件上传到七牛云
-    # avatar_url = upload_to_qn(filename, filepath)
+    # avatar_url = upload_to_qn(filename, filepath);
 
     # # 保存avatar_url
     # request.user.avatar = avatar_url
