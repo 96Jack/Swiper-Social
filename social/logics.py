@@ -1,5 +1,7 @@
 import datetime
+from statistics import mode
 from user.models import User
+from social.models import Friend, Swiperd
 
 def rcmd(user):
     '''推荐可滑动的用户'''
@@ -23,4 +25,15 @@ def rcmd(user):
     # TODO: 删除划过的用户
     return users
 
-    
+def like_someone(user, sid):
+    '''喜欢某人'''
+    Swiperd.object.create(uid=user.id, sid=sid, stype='like') # 添加滑动记录
+
+    # 检查对方是否喜欢自己
+    if Swiperd.is_liked(sid, user.id):
+        # 如果对方喜欢过自己，匹配成好友
+        Friend.make_friends(user.id, sid)
+        return True
+    else:
+        return False
+        

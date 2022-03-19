@@ -81,8 +81,10 @@ class Profile(models.Model):
             "vibration"         :    self.vibration     ,      
             "only_matche"       :    self.only_matche   ,          
             "auto_play"         :    self.auto_play     ,      
-
-
         }
+    
+
+
+
 
 
