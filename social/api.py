@@ -1,13 +1,16 @@
 # Create your views here.
+from cmath import log
 from libs.http import render_json
 from social import logics
 
 
+
 def get_rcm_users(request):
     '''获取推荐用户'''
-    
-    ...
-    return render_json()
+    users = logics.rcmd(request.user)
+    result = [user.to_dict() for user in users]
+    return render_json(result)
+
 def like(request):
     '''右滑-喜欢'''
     ...
