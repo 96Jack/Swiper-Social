@@ -1,12 +1,11 @@
-from distutils.errors import LinkError
-from winreg import DisableReflectionKey
-from django.shortcuts import render
-
 # Create your views here.
 from libs.http import render_json
+from social import logics
+
 
 def get_rcm_users(request):
     '''获取推荐用户'''
+    
     ...
     return render_json()
 def like(request):
