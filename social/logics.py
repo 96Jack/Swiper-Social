@@ -25,13 +25,15 @@ def rcmd(user):
         birth_day__lte=latest_birthday,
     ).exclude(id__in=sid_list)[:20]             # 懒加载
 
-    return users
+    return userskmhb
 
 def like_someone(user, sid):
     '''喜欢某人'''
-    Swiperd.objects.create(uid=user.id, sid=sid, stype='like') # 添加滑动记录
+    # 避免重复插入同一个用户
 
-    # 检查对方是否喜欢自己
+    Swiperd.swipe(user.id, sid, 'like') # 添加滑动记录
+
+    # 检查对方是否喜欢自己p
     if Swiperd.is_liked(sid, user.id):
         # 如果对方喜欢过自己，匹配成好友：外部通过类名调用类方法
         Friend.make_friends(user.id, sid)

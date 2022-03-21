@@ -21,6 +21,15 @@ class Swiperd(models.Model):
         # cls.objecccgts.filter(uid=uid, sid=sid, stype=condition)
         return  cls.objects.filter(uid=uid, sid=sid, stype__in=['like', 'superlike']).exists()
 
+    @classmethod
+    def swipe(cls, uid, sid, stype):
+        if stype not in ['like','superlike','dislike']:
+            return # TODO 返回状态码
+        
+        if cls.objects.filter(uid=uid, sid=sid, stype=stype):
+            return # TODO 重复滑动状态码     
+        return cls.objects.create(uid=uid, sid=sid, stype=stype)
+
 class Friend(models.Model):
     '''友好关系'''
     uid1 = models.IntegerField()
@@ -30,6 +39,5 @@ class Friend(models.Model):
     def make_friends(cls, uid, sid):
         """创建友好关系"""
         uid1, uid2 = (sid, uid) if uid > sid else (uid, sid)
-        cls.objects.create(uid1=uid1, uid2=uid2)
-
-
+        # get_or_create(): 先查询再创建：避免重复创建同一个人
+        cls.objects.get_or_create(uid1=uid1, uid2=uid2)
