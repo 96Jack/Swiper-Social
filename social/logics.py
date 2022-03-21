@@ -29,7 +29,7 @@ def rcmd(user):
 
 def like_someone(user, sid):
     '''喜欢某人'''
-    Swiperd.object.create(uid=user.id, sid=sid, stype='like') # 添加滑动记录
+    Swiperd.objects.create(uid=user.id, sid=sid, stype='like') # 添加滑动记录
 
     # 检查对方是否喜欢自己
     if Swiperd.is_liked(sid, user.id):
