@@ -1,7 +1,5 @@
 # Create your views here.
-from cmath import log
 
-from django.shortcuts import render
 from libs.http import render_json
 from social import logics
 
@@ -19,7 +17,7 @@ def like(request):
     is_matched = logics.like_someone(request.user, sid)
     return render_json({'matched':is_matched})
     
-    return render_json()
+    
 def superlike(request):
     '''上滑-超级喜欢'''
     ...

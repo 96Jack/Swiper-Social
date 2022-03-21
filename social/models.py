@@ -9,9 +9,9 @@ class Swiperd(models.Model):
         ('superlike', '超级喜欢'),
         ('dislike', '不喜欢'),
     )
-    uid = models.IntegerFiled(verbose_name='滑动者的ID')
-    sid = models.IntegerField(verbase_name='被滑动者的ID')
-    stype = models.CharField(max_length=10, choices=STYPE,verbase_name='滑动的类型')
+    uid = models.IntegerField(verbose_name='滑动者的ID')
+    sid = models.IntegerField(verbose_name='被滑动者的ID')
+    stype = models.CharField(max_length=10, choices=STYPE,verbose_name='滑动的类型')
     stime = models.DateTimeField(auto_now_add=True, verbose_name='滑动时间')
 
     @classmethod
