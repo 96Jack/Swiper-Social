@@ -25,7 +25,7 @@ def rcmd(user):
         birth_day__lte=latest_birthday,
     ).exclude(id__in=sid_list)[:20]             # 懒加载
 
-    return userskmhb
+    return users
 
 def like_someone(user, sid):
     '''喜欢某人'''

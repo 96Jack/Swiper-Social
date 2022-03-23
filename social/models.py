@@ -1,3 +1,4 @@
+from common import stat
 from django.db import models
 from django.db.models import Q
 # Create your models here.
@@ -24,10 +25,11 @@ class Swiperd(models.Model):
     @classmethod
     def swipe(cls, uid, sid, stype):
         if stype not in ['like','superlike','dislike']:
-            return # TODO 返回状态码
+            raise stat.SwiperTypeError
         
         if cls.objects.filter(uid=uid, sid=sid, stype=stype):
-            return # TODO 重复滑动状态码     
+            raise stat.SwiperRepeatError #  重复滑动状态码     
+
         return cls.objects.create(uid=uid, sid=sid, stype=stype)
 
 class Friend(models.Model):
