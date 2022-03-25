@@ -39,7 +39,7 @@ def get_vcode(request):
     if logics.send_vcode(phonenum):
         return render_json()
     else:
-        return render_json(code=stat.VCODE_ERR)
+        raise stat.VcodeError
     
     
     
@@ -65,7 +65,7 @@ def check_vcode(request):
         # 实例对象user
         return render_json(code=stat.OK, data=user.to_dict())
     else:
-        return render_json(code=stat.INVILD_VCODE)
+        raise stat.InvildVcode
 
 def wb_auth(request):
     """用户授权页"""
@@ -78,13 +78,13 @@ def callback(request):
     # print("access_code",code)
     access_token, wb_uid = logics.get_access_token(code)
     if not access_token:
-        return render_json(code=stat.ACCESS_TOKEN_ERR )
+        raise stat.AccessTokenError
 
     #获取用户信息
     user_info = logics.get_user_info(access_token, wb_uid)
     print("user_info:+++++++++",user_info)
     if not user_info:
-        return render_json(code=stat.USER_INFO_ERR)
+        raise stat.UserInfoError
 
     # 执行登录或注册
     try:
@@ -111,11 +111,11 @@ def set_profile(request):
     # 检查User数据,is_valid:当不含有不合规的字段时是True,含不合规的字段时是False
     # 不合规的字段保存在user_form.errors里面
     if not user_form.is_valid():
-        return render_json(code=stat.USER_DATA_ERROR, data=user_form.errors)
+        raise stat.UserDataError(user_form.errors)
 
     # 检查Profile数据
     if not profile_form.is_valid():
-        return render_json(code=stat.PROFILE_DATA_ERROR, data=profile_form.errors)
+        return stat.UserInfoError(profile_form.errors)
     
     #实例化绑定在request上的用户
     user = request.user

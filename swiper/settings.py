@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'user',
+    'social',
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 自定义中间件
     'common.middleware.AuthorizeMiddleware',
+    'common.middleware.LogicErrMiddleware'
 ]
 
 ROOT_URLCONF = 'swiper.urls'

@@ -12,6 +12,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.http import JsonResponse
 
 from common import stat
+from libs.http import render_json
 from user.models import User
 
 class AuthorizeMiddleware(MiddlewareMixin):
@@ -32,3 +33,11 @@ class AuthorizeMiddleware(MiddlewareMixin):
             return JsonResponse({'code': stat.LOGIN_REQUIRED, 'data': None})
         # 获取当前用户：将用户信息绑定到request上，api接口通过request获取用户信息
         request.user = User.objects.get(id=uid)
+
+class LogicErrMiddleware(MiddlewareMixin):
+    """逻辑异常处理中间件"""
+    def process_exception(self, request, exception):
+        if isinstance(exception, stat.LogicErr):
+            return render_json(data=exception.data, code=exception.code)
+        
+
