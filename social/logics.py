@@ -1,10 +1,18 @@
+from multiprocessing.dummy import JoinableQueue
+from threading import stack_size
 import time 
 import datetime
 
 from common.keys import SUPERLIKED_KEY
+from common.keys import REWIND_KEY
 from libs.cache import rds
+
 from user.models import User
 from social.models import Friend, Swiperd
+from swiper import cfg
+from common import stat
+
+
 
 def rcmd(user):
     '''推荐可滑动的用户'''
@@ -61,7 +69,6 @@ def like_someone(user, sid):
     else:
         return False
         
-
 def superlike_someone(user, sid):
     """超级喜欢某人
     自己超级喜欢对方则一定会出现在对方的推荐列表里
@@ -81,8 +88,38 @@ def superlike_someone(user, sid):
     
 def dislike_someone(user, sid):
     """不喜欢某人"""
-    Swiperd.swipe(user.id, sid, 'superlike') # 添加滑动记录
+    Swiperd.swipe(user.id, sid, 'dislike') # 添加滑动记录
      # 如果对方超级喜欢过你，将对方从你的超级喜欢列表中删除（推荐列表）
     rds.zrem(SUPERLIKED_KEY % user.id, sid )
 
-    
+def rewind_swiped(user):
+    """反悔一次滑动记录"""
+    # 1.获取当天的反悔次数
+    rewind_times = rds.get(REWIND_KEY  % user.id, 0)
+    print('rewind_times::::::::::',rewind_times)
+
+    # 2.检查当天的反悔次数是否达到3次
+    if rewind_times >= cfg.DAILY_REWIND:
+        raise stat.RewindLimit
+
+    # 2.找到最近一次的滑动记录
+    latest_swiped =Swiperd.objects.filter(uid=user.id).latest('stime')
+
+    # 4.检查反悔的记录是否是在5分钟之内的
+    now = datetime.datetime.now()
+    if (now - latest_swiped.stime).total_seconds() >= cfg.REWIND_TIMEOUT:
+        raise stat.RewindTimeout
+
+    # 5.检查上一次的匹配关系
+        # 1.如果匹配成了好友 > 删除好友关系
+    if latest_swiped.stype in ['like', 'superlike']:
+        Friend.break_off(user.id, latest_swiped.sid)
+        # 2.如果上一次是超级喜欢 > 将自身的uid从对方的优先推荐的列表中删除
+        if latest_swiped.stype == 'superlike':
+             rds.zrem(SUPERLIKED_KEY % latest_swiped.sid, user.id )            
+
+    # 6.删除滑动记录
+    latest_swiped.delete()
+    # 7.更新当天的滑动次数
+    rds.set(REWIND_KEY  % user.id, rewind_times + 1)
+

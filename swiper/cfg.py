@@ -15,6 +15,11 @@ REDIS = {
 
 }
 
+# 反悔相关的配置
+DAILY_REWIND = 3 # 每日可反悔的数目
+REWIND_TIMEOUT = 5 * 60 # 可反悔记录的秒数
+
+
 # 七牛云配置
 QN_ACCESS_KEY = 'uQeKv_jRYUP8iz1g3uTv5LSwCSxIjysgUdwtv3Pt'
 QN_SECRET_KEY = 'qZaNECJFH-3L2mNB7NHVlNFNDSz5R5ScaGKSZuCd'

@@ -18,11 +18,13 @@ def gen_logic_err(name, code):
     # (LogicErr, )元组， 类的多继承
     return type(name, (LogicErr, ), {'code':code}) 
 
-nvildVcode       = gen_logic_err('InvildVcode', 10001)          # 验证码无效
+nvildVcode        = gen_logic_err('InvildVcode', 10001)           # 验证码无效
 AccessTokenError  = gen_logic_err('AccessTokenError', 1002)       # 授权码接口错误
 UserInfoError     = gen_logic_err('UserInfoError', 1003)          # 用户信息接口错误
-LoginRequired     = gen_logic_err('LoginRequired', 1004)         # 用户未登录
-UserDataError     = gen_logic_err('UserDataError', 1005)        # 用户数据错误
-ProfileDataError  = gen_logic_err('ProfileDataError', 1006)     # 用户交友资料错误
+LoginRequired     = gen_logic_err('LoginRequired', 1004)          # 用户未登录
+UserDataError     = gen_logic_err('UserDataError', 1005)          # 用户数据错误
+ProfileDataError  = gen_logic_err('ProfileDataError', 1006)       # 用户交友资料错误
 SwiperTypeError   = gen_logic_err('SwiperTypeError', 1007)        # 滑动类型错误
 SwiperRepeatError = gen_logic_err('SwiperRepeatError', 1008)      # 重复滑动错误
+RewindLimit       = gen_logic_err('RewindLimit', 1009)            # 反悔达到上限
+RewindTimeout     = gen_logic_err('RewindTimeout', 1010)          # 反悔超时

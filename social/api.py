@@ -39,7 +39,7 @@ def dislike(request):
     return render_json()
 def rewind(request):
     '''反悔'''
-    ...
+    logics.rewind_swiped(request.user)
     return render_json()
 
 def who_like_me(request):
@@ -57,6 +57,3 @@ def firend_list(request):
     result = [user.to_dict() for user in users]
 
     return render_json(result)
-
-
-    return render_json()
