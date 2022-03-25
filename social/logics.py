@@ -126,6 +126,3 @@ def rewind_swiped(user):
     print("next_zero:{}\n now:{}\n".format(next_zero ,now))
     print(' int(remain_seconds): :::::::::',  int(remain_seconds))
     rds.set(REWIND_KEY  % user.id, rewind_times + 1, int(remain_seconds))
-    # rds.set(REWIND_KEY  % user.id, rewind_times + 1)
-    
-
