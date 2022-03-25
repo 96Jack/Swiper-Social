@@ -24,13 +24,23 @@ class Swiperd(models.Model):
 
     @classmethod
     def swipe(cls, uid, sid, stype):
+        """执行第一次滑动"""
+        # 检查 stype是否正确
         if stype not in ['like','superlike','dislike']:
+            # 返回滑动类型错误
             raise stat.SwiperTypeError
-        
+
+        # 检查是否滑动过当前用户
         if cls.objects.filter(uid=uid, sid=sid, stype=stype):
             raise stat.SwiperRepeatError #  重复滑动状态码     
 
         return cls.objects.create(uid=uid, sid=sid, stype=stype)
+
+    @classmethod
+    def who_liked_me(cls, uid):
+        """查看谁喜欢过我"""
+        return cls.objects.filter(sid=uid, stype__in=['like', 'superlike'])\
+                          .values_list('uid', flat=True) # 只取出querryset元组中的一个元素
 
 class Friend(models.Model):
     '''友好关系'''

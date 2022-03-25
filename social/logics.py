@@ -84,3 +84,5 @@ def dislike_someone(user, sid):
     Swiperd.swipe(user.id, sid, 'superlike') # 添加滑动记录
      # 如果对方超级喜欢过你，将对方从你的超级喜欢列表中删除（推荐列表）
     rds.zrem(SUPERLIKED_KEY % user.id, sid )
+
+    
