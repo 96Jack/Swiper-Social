@@ -1,9 +1,13 @@
 # Create your views here.
 
+from pydoc import render_doc
+from unittest import result
 from libs.http import render_json
 from social import logics
 from social.models import Swiperd
+from social.models import Friend
 from user.models import User
+
 
 
 
@@ -48,4 +52,11 @@ def who_like_me(request):
 
 def firend_list(request):
     '''朋友列表'''
+    friend_id_list = Friend.friend_ids(request.user.id)
+    users = User.objects.filter(id__in=friend_id_list)
+    result = [user.to_dict() for user in users]
+
+    return render_json(result)
+
+
     return render_json()

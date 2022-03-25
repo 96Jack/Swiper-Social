@@ -53,3 +53,16 @@ class Friend(models.Model):
         uid1, uid2 = (sid, uid) if uid > sid else (uid, sid)
         # get_or_create(): 先查询再创建：避免重复创建同一个人
         cls.objects.get_or_create(uid1=uid1, uid2=uid2)
+
+    @classmethod
+    def friend_ids(cls, uid):
+        """查询自己的所有好友ID"""
+        condition = Q(uid1=uid) | Q(uid2=uid)
+        friend_relations = cls.objects.filter(condition)
+        uid_list = []
+        for relation in friend_relations:
+            friend_id = relation.uid2 if relation.uid1 == uid else relation.uid1
+            uid_list.append(friend_id)
+        return uid_list
+        
+
