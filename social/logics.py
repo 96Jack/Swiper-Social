@@ -66,12 +66,9 @@ def superlike_someone(user, sid):
     """超级喜欢某人
     自己超级喜欢对方则一定会出现在对方的推荐列表里
     """
-
     Swiperd.swipe(user.id, sid, 'superlike') # 添加滑动记录
-
     rds.zadd(SUPERLIKED_KEY % sid , {user.id: time.time()})  # 将自己的id写入对方的优先推荐队列
-
-    # 检查对方是否喜欢自己p
+    # 检查对方是否喜欢自己
     if Swiperd.is_liked(sid, user.id):
         # 如果对方喜欢过自己，匹配成好友：外部通过类名调用类方法
         Friend.make_friends(user.id, sid)
@@ -82,3 +79,8 @@ def superlike_someone(user, sid):
     else:
         return False
     
+def dislike_someone(user, sid):
+    """不喜欢某人"""
+    Swiperd.swipe(user.id, sid, 'superlike') # 添加滑动记录
+     # 如果对方超级喜欢过你，将对方从你的超级喜欢列表中删除（推荐列表）
+    rds.zrem(SUPERLIKED_KEY % user.id, sid )
