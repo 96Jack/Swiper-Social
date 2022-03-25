@@ -1,5 +1,8 @@
+import time 
 import datetime
-from statistics import mode
+
+from common.keys import SUPERLIKED_KEY
+from libs.cache import rds
 from user.models import User
 from social.models import Friend, Swiperd
 
@@ -17,14 +20,29 @@ def rcmd(user):
     # 取出滑过的用户; flat=True将元组转化成列表
     sid_list = Swiperd.objects.filter(uid=user.id).values_list('sid', flat=True)
 
-    # 筛选出匹配的用户; 排除已经滑过的用户
-    users = User.objects.filter(
-        sex=profile.dating_sex,
-        location=profile.dating_location,
-        birth_day__gte=earliest_birthday,
-        birth_day__lte=latest_birthday,
-    ).exclude(id__in=sid_list)[:20]             # 懒加载
+    # VIP用户取出超级喜欢过自己，但是还没有被自己滑动过的用户ID： 使用ORM取出
+    # -----------------------直接从数据库中取出：性能太差-------------------------
+    # who_superlike_me = Swiperd.objects.filter(sid=user.id, stype='superlike')\
+    #                                   .exclude(uid__in=sid_list)\
+    #                                   .values_list('uid', flat=True)
+    # --------------------------------------------------------------------------
 
+    # 使用Redis取出
+    superliked_me_id_list = [int(uid) for uid in rds.zrange(SUPERLIKED_KEY % user.id , 0, 19)]
+    superliked_me_users = User.objects.filter(id__in=superliked_me_id_list)
+
+    # 筛选出匹配的用户; 排除已经滑过的用户
+    other_count = 20 - len(superliked_me_users)
+    if other_count > 0:
+        other_users = User.objects.filter(
+            sex=profile.dating_sex,
+            location=profile.dating_location,
+            birth_day__gte=earliest_birthday,
+            birth_day__lte=latest_birthday,
+        ).exclude(id__in=sid_list)[:other_count]             # 懒加载
+        users = superliked_me_users | other_users
+    else:
+        users = superliked_me_users
     return users
 
 def like_someone(user, sid):
@@ -37,7 +55,30 @@ def like_someone(user, sid):
     if Swiperd.is_liked(sid, user.id):
         # 如果对方喜欢过自己，匹配成好友：外部通过类名调用类方法
         Friend.make_friends(user.id, sid)
+        # 如果对方超级喜欢过你，将对方从你的超级喜欢列表中删除
+        rds.zrem(SUPERLIKED_KEY % user.id, sid )
         return True
     else:
         return False
         
+
+def superlike_someone(user, sid):
+    """超级喜欢某人
+    自己超级喜欢对方则一定会出现在对方的推荐列表里
+    """
+
+    Swiperd.swipe(user.id, sid, 'superlike') # 添加滑动记录
+
+    rds.zadd(SUPERLIKED_KEY % sid , {user.id: time.time()})  # 将自己的id写入对方的优先推荐队列
+
+    # 检查对方是否喜欢自己p
+    if Swiperd.is_liked(sid, user.id):
+        # 如果对方喜欢过自己，匹配成好友：外部通过类名调用类方法
+        Friend.make_friends(user.id, sid)
+        # 如果对方超级喜欢过你，将对方从你的超级喜欢列表中删除
+        rds.zrem(SUPERLIKED_KEY % user.id, sid )
+
+        return True
+    else:
+        return False
+    

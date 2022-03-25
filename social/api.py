@@ -20,7 +20,10 @@ def like(request):
     
 def superlike(request):
     '''上滑-超级喜欢'''
-    ...
+    sid = int(request.POST.get('sid'))
+    is_matched = logics.superlike_someone(request.user, sid)
+    return render_json({'matched':is_matched})
+    
     return render_json()
 def dislike(request):
     '''左滑-不喜欢'''
