@@ -11,7 +11,8 @@ class Vip(models.Model):
 
 class Permission(models.Model):
     """权限表"""
-    name = models.CharField(max_length=10, unique=True, verbose_name='权限名称')
+    name = models.CharField(max_length=20, unique=True, verbose_name='权限名称')
+    desc = models.TextField(verbose_name='权限的描述')
 
 class VipPermRelation(models.Model):
     """会员和权限的关系表 : 多对多

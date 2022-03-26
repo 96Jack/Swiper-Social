@@ -23,25 +23,28 @@ def like(request):
     is_matched = logics.like_someone(request.user, sid)
     return render_json({'matched':is_matched})
     
-    
+# @need_permission
 def superlike(request):
     '''上滑-超级喜欢'''
     sid = int(request.POST.get('sid'))
     is_matched = logics.superlike_someone(request.user, sid)
     return render_json({'matched':is_matched})
     
-    return render_json()
+
 def dislike(request):
     '''左滑-不喜欢'''
     sid = int(request.POST.get('sid'))
     logics.dislike_someone(request.user, sid)
     
     return render_json()
+
+# @need_permission
 def rewind(request):
     '''反悔'''
     logics.rewind_swiped(request.user)
     return render_json()
 
+# @need_permission
 def who_like_me(request):
     '''查看谁喜欢过我'''
     user_id_list = Swiperd.who_liked_me(request.user.id)

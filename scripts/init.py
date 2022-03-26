@@ -1,10 +1,11 @@
+from mimetypes import init
 import os
-from secrets import choice 
 import sys
 import random
 from datetime import date
 
 import django
+
 
 
 # 设置Django的运行环境
@@ -16,6 +17,8 @@ django.setup()
 # 加载django框架中的文件，要放在初始化django环境之后
 
 from user.models import User 
+from vip.models import Permission, VipPermRelation
+from vip.models import Vip
 
 print(BASE_DIR)
 
@@ -98,4 +101,73 @@ def create_robots(n):
         except django.db.utils.IntegrityError:
             pass
 
-# TODO 
+def init_permission():
+    """创建权限模型"""
+    permissions = (
+        ('vipflag',             '会员身份标识'),
+        ('superlike',           '超级喜欢'),
+        ('rewind',              '反悔功能'),
+        ('anylocation',         '任意更改定位'),
+        ('unlimit_like',        '无限喜欢次数'),
+        ('show_liked_me',       '查看喜欢过我的人'),
+    )
+
+    for name, desc in permissions:
+        perm, _ = Permission.objects.get_or_create(name=name, desc=desc)
+        print('create permission %s' % perm.name)
+
+def init_vip():
+    duration = {
+        0: 10000, 
+        1: 60, 
+        2: 50, 
+        3: 30, 
+    }
+    for i in range(4):
+        vip, _ = Vip.objects.get_or_create(
+            name  ='%d 级会员' % i , 
+            level = i , 
+            price = i * 10.0, 
+            days = duration[i], 
+        )
+        print('create %s' % vip.name)
+
+def create_vip_perm_relations():
+    """创建Vip和Permission的关系"""
+    # 获取VIP
+    vip1 = Vip.objects.get(level=1)
+    vip2 = Vip.objects.get(level=2)
+    vip3 = Vip.objects.get(level=3)
+
+    # 获取权限
+    vipflag         =        Permission.objects.get(name      ='vipflag')
+    superlike       =        Permission.objects.get(name      ='superlike')
+    rewind          =        Permission.objects.get(name      ='rewind')
+    anylocation     =        Permission.objects.get(name      ='anylocation')
+    unlimit_like    =        Permission.objects.get(name      ='unlimit_like')
+    show_liked_me   =        Permission.objects.get(name      ='show_liked_me')
+
+    # 给VIP 1 分配权限
+    VipPermRelation.objects.get_or_create(vip_id=vip1.id, perm_id=vipflag.id )
+    VipPermRelation.objects.get_or_create(vip_id=vip1.id, perm_id=superlike.id )
+
+    # 给VIP 2 分配权限
+    VipPermRelation.objects.get_or_create(vip_id=vip2.id, perm_id=vipflag.id)
+    VipPermRelation.objects.get_or_create(vip_id=vip2.id, perm_id=superlike.id)
+    VipPermRelation.objects.get_or_create(vip_id=vip2.id, perm_id=rewind.id)
+
+    # 给VIP 3 分配权限
+    VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=vipflag.id)
+    VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=superlike.id)
+    VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=rewind.id)
+    VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=anylocation.id)
+    VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=unlimit_like.id)
+    VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=show_liked_me.id)
+
+
+if __name__=="__main__":
+    # create_robots(10000)
+    init_permission()
+    init_vip()
+    create_vip_perm_relations()
+
