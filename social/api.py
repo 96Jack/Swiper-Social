@@ -7,6 +7,7 @@ from social import logics
 from social.models import Swiperd
 from social.models import Friend
 from user.models import User
+from vip.logics import need_permission
 
 
 
@@ -23,7 +24,7 @@ def like(request):
     is_matched = logics.like_someone(request.user, sid)
     return render_json({'matched':is_matched})
     
-# @need_permission
+@need_permission
 def superlike(request):
     '''上滑-超级喜欢'''
     sid = int(request.POST.get('sid'))
@@ -38,14 +39,14 @@ def dislike(request):
     
     return render_json()
 
-# @need_permission
+@need_permission
 def rewind(request):
     '''反悔'''
     logics.rewind_swiped(request.user)
     return render_json()
 
-# @need_permission
-def who_like_me(request):
+@need_permission
+def show_liked_me(request):
     '''查看谁喜欢过我'''
     user_id_list = Swiperd.who_liked_me(request.user.id)
     users = User.objects.filter(id__in=user_id_list)

@@ -1,7 +1,7 @@
 from random import choices
 from tabnanny import verbose
 from django.db import models
-
+from vip.models import Vip
 # Create your models here.
 
 class User(models.Model):
@@ -31,7 +31,7 @@ class User(models.Model):
     location      = models.CharField( max_length=20, choices=LOCATION, verbose_name="常居地         ")
     vip_id        = models.IntegerField(default=1, verbose_name='用户对应的vip')
     vip_expired   = models.DateTimeField(default='2000-1-1', verbose_name='会员的过期时间')
-    
+
     '''
     User 和 Profile 之间是一对一的关系:不使用外键构建一对一表关系
     1.通过id绑定User和Profile两表之间的关系,不使用外键,性能太差
@@ -45,6 +45,23 @@ class User(models.Model):
             self._profile, _ = Profile.objects.get_or_create(id=self.id)
         return self._profile
 
+    @property
+    def vip(self):
+        """
+        mysql> select * from vip_vip;
+        +----+-------------+-------+-------+-------+
+        | id | name        | level | price | days  |
+        +----+-------------+-------+-------+-------+
+        |  1 | 0 级会员    |     0 |     0 | 10000 |
+        |  2 | 1 级会员    |     1 |    10 |    60 |
+        |  3 | 2 级会员    |     2 |    20 |    50 |
+        |  4 | 3 级会员    |     3 |    30 |    30 |
+        +----+-------------+-------+-------+-------+
+        """
+        if not hasattr(self, '_vip'):
+
+            self._vip = Vip.objects.get(id=self.vip_id)
+        return self._vip
 
     def to_dict(self):
         return {

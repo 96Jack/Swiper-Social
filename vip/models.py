@@ -5,9 +5,17 @@ from django.db import models
 class Vip(models.Model):
     """会员表"""
     name = models.CharField(max_length=10, unique=True, verbose_name='会员名称')
-    level = models.IntegerField(default=0, verbose_name='会员名称')
+    level = models.IntegerField(default=0, verbose_name='会员等级')
     price = models.FloatField(default=0.0, verbose_name='当前会员对应的价格')
     days = models.IntegerField(default=0, verbose_name='购买的天数')
+
+    def has_perm(self, perm_name):
+        """检查当前VIP是否具有某个权限"""
+        # select id from Permission
+        perm = Permission.objects.filter(name=perm_name).only('id').first()
+        return VipPermRelation.objects.filter(vip_id=self.id, perm_id=perm.id)\
+                                      .exists()
+
 
 class Permission(models.Model):
     """权限表"""

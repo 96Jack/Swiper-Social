@@ -118,7 +118,7 @@ def init_permission():
 
 def init_vip():
     duration = {
-        0: 10000, 
+        0: 100000, 
         1: 60, 
         2: 50, 
         3: 30, 
@@ -167,7 +167,7 @@ def create_vip_perm_relations():
 
 if __name__=="__main__":
     # create_robots(10000)
-    init_permission()
-    init_vip()
-    create_vip_perm_relations()
+    # init_permission()
+    # init_vip()
+    # create_vip_perm_relations()
 
