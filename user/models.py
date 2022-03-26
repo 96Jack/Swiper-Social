@@ -1,4 +1,5 @@
 from random import choices
+from tabnanny import verbose
 from django.db import models
 
 # Create your models here.
@@ -28,7 +29,9 @@ class User(models.Model):
     # 形象介绍的内容较多，一般存在服务器，给网址
     avatar        = models.CharField( max_length=256, verbose_name="个⼈形象   ")
     location      = models.CharField( max_length=20, choices=LOCATION, verbose_name="常居地         ")
-             
+    vip_id        = models.IntegerField(default=1, verbose_name='用户对应的vip')
+    vip_expired   = models.DateTimeField(default='2000-1-1', verbose_name='会员的过期时间')
+    
     '''
     User 和 Profile 之间是一对一的关系:不使用外键构建一对一表关系
     1.通过id绑定User和Profile两表之间的关系,不使用外键,性能太差
