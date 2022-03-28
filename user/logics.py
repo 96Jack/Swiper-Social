@@ -1,4 +1,4 @@
-import os
+import logging
 
 from cgitb import reset
 from urllib import response
@@ -8,6 +8,8 @@ import random
 from common import keys
 from swiper import cfg
 from tasks import celery_app
+
+inf_log = logging.getLogger('inf')
 
 def gen_randcode(length: int) -> str:
     """产生出指定长度的随机码"""
@@ -33,6 +35,7 @@ def send_vcode(phone):
     vcode = gen_randcode(6)
     # 将验证码设置在缓存中，并设置过期时间180s
     cache.set(keys.VCODE_KEY % phone, vcode, 180)
+    inf_log.info("验证码: %s "% vcode)
     print("验证码: ", vcode)
     print("cached_vcode:",cache.get(keys.VCODE_KEY % phone))
     

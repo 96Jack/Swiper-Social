@@ -18,7 +18,8 @@ def gen_logic_err(name, code):
     # (LogicErr, )元组， 类的多继承
     return type(name, (LogicErr, ), {'code':code}) 
 
-nvildVcode        = gen_logic_err('InvildVcode', 10001)           # 验证码无效
+VcodeErr          = gen_logic_err('VcodeErr', 1000)               # 验证码错误
+InvildVcode       = gen_logic_err('InvildVcode', 1001)           # 验证码无效
 AccessTokenError  = gen_logic_err('AccessTokenError', 1002)       # 授权码接口错误
 UserInfoError     = gen_logic_err('UserInfoError', 1003)          # 用户信息接口错误
 LoginRequired     = gen_logic_err('LoginRequired', 1004)          # 用户未登录

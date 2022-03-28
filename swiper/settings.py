@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+print(f"=====BASE_DIR:{BASE_DIR}======")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -128,3 +128,62 @@ USE_TZ = False
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# 日志配置
+LOGGING = {
+    'version':1,
+    'disable_existing_loggers': False, # 关闭django里面的其他日志
+    # 格式配置
+    'formatters':{
+        'simple':{
+            'format':'%(asctime)s %(module)s.%(funcName)s: %(message)s',
+            'datefmt':'%Y-%m-%d %H:%M:%S',
+        },
+        'verbose':{
+            'format':('%(asctime)s %(levelname)s [%(process)d-%(threadName)s]'
+                    '%(module)s.%(funcName)s line %(lineno)d: %(message)s'),
+            'datefmt':'%Y-%m-%d %H:%M:%S',
+        }
+    },
+
+    #handler 配置
+    'handlers':{
+        'console':{
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG' if DEBUG  else 'WARNING'
+        },
+        'info':{
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': f'{BASE_DIR}/logs/info.log', # 日志保存路径
+            'when': 'D',                             # 每天切割日志
+            'backupCount':30,                        # 日志的保留时间
+            'formatter': 'simple',
+            'level':    'INFO',
+        },
+        'error':{
+            'class': 'logging.handlers.TimedRotatingFileHandler',
+            'filename': f'{BASE_DIR}/logs/error.log', # 日志保存路径
+            'when': 'W0',                             # 每周一切割日志（周二：W1）
+            'backupCount':4,                          # 日志的保留时间
+            'formatter': 'verbose',
+            'level':    'WARNING',
+        }
+    },
+    # Logger 配置
+    'loggers':{
+        'django':{
+            'handlers':['console'],
+        },
+        'inf':{
+            'handlers':['info'],
+            'propagate':True,
+            'level': 'INFO',
+        },
+        'err':{
+            'handlers':['error'],
+            'propagate':True,
+            'level': 'WARNING',
+        }
+    }
+}

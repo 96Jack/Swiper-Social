@@ -6,7 +6,7 @@ Date       :2022/03/13 14:01:35
 Author     :Xu Zhiwen
 version    :python3.7.8
 '''
-
+import logging
 
 from django.utils.deprecation import MiddlewareMixin
 from django.http import JsonResponse
@@ -14,6 +14,8 @@ from django.http import JsonResponse
 from common import stat
 from libs.http import render_json
 from user.models import User
+
+err_log = logging.getLogger('err')
 
 class AuthorizeMiddleware(MiddlewareMixin):
     '''登录验证中间件'''
@@ -38,6 +40,7 @@ class LogicErrMiddleware(MiddlewareMixin):
     """逻辑异常处理中间件"""
     def process_exception(self, request, exception):
         if isinstance(exception, stat.LogicErr):
+            err_log.error('LogicError [%s] %s'% (exception.code, exception.data))
             return render_json(data=exception.data, code=exception.code)
         
 

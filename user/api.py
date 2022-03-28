@@ -1,5 +1,6 @@
 # 标准库
-import os
+import logging
+
 
 # 第三方库
 from django.http import JsonResponse
@@ -18,7 +19,7 @@ from libs.http import render_json
 from user.logics import save_upload_avatar
 
 
-
+inf_log = logging.getLogger('inf')
 
 
 # Create your views here.
@@ -39,7 +40,7 @@ def get_vcode(request):
     if logics.send_vcode(phonenum):
         return render_json()
     else:
-        raise stat.VcodeError
+        raise stat.VcodeErr
     
     
     
@@ -60,6 +61,7 @@ def check_vcode(request):
                 phonenum=phonenum,
                 nickname=phonenum
             )
+        inf_log.info('User(%s) login' % user.id)
         request.session['uid'] = user.id
         # 传入的数据可以被render_json序列化,code:状态码，data:返回的数据
         # 实例对象user
