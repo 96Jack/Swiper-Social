@@ -10,11 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
+from imp import cache_from_source
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-print(f"=====BASE_DIR:{BASE_DIR}======")
+# print(f"=====BASE_DIR:{BASE_DIR}======")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -88,6 +89,25 @@ DATABASES = {
         'PASSWORD': '12345678'
     }
 
+}
+
+# 让Django使用 Redis作为缓存后端：
+#       1. pip install django-cache 
+#       2.freeze > requirement.txt
+# from django.core.cache import cache 此时就会用redis作为缓存使用:
+#       from django.conf import settings 查看
+# 无cache.range() : 
+#       只封装了redis缓存的接口，不能代替redis,
+#       使用redis更高级的语法得用封装的接口
+CACHES = {
+    'default':{
+        'BACKEND':'django_redis.cache.RedisCache',
+        'LOCATION':'redis://172.17.19.80/6379/3',
+        'OPTIONS':{
+            'CLIENT_CLASS':"django_redis.client.DefaultClient",
+            'PICKLE_VERSION':-1,
+        }
+    }
 }
 
 

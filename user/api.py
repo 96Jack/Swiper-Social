@@ -13,10 +13,12 @@ from libs.qn_cloud import upload_to_qn
 from user import logics
 from common import stat
 from user.froms import ProfileForm, UserForm
-from user.models import User
+from user.models import Profile, User
 from swiper import cfg
 from libs.http import render_json
 from user.logics import save_upload_avatar
+from libs.cache import rds
+from common.keys import PROFILE_KEY
 
 
 inf_log = logging.getLogger('inf')
@@ -100,13 +102,21 @@ def callback(request):
 def get_profile(request):
     '''获取个人资料'''
     # 中间件+@property+用户资料绑定在实例上
-    profile_data = request.user.profile.to_dict()
+    key = PROFILE_KEY % request.user.id
+    profile_data = rds.get(key) # 先从缓存中获取数据：第一次从数据库中获取数据，此后从缓存中获取数据
+    print("先从缓存中获取数据:%s" % profile_data)
 
+    if profile_data is None:
+        # 如果缓存中没有从数据库中取
+        profile_data = request.user.profile.to_dict()
+        # 将取出的数据添加到缓存
+        print("从数据库中获取数据: %s" % profile_data)
+        rds.set(key, profile_data)
     return render_json(data=profile_data)
 
 def set_profile(request):
     """修改个人资料"""
-    user_form = UserForm(request.POST)
+    user_form = UserForm(request.POST) 
     profile_form = ProfileForm(request.POST)
 
    
@@ -131,6 +141,10 @@ def set_profile(request):
     # user.profile.__dict__.update(profile_form.cleaned_data)
     # user.profile.save()
 
+    # 修改缓存
+    key = key = PROFILE_KEY % request.user.id
+    rds.set(key, user.profile.to_dict())
+    
     return render_json()
 
 def upload_avatar(request):
