@@ -1,10 +1,9 @@
-from logging import exception
 import pickle
 from redis import Redis as _Redis
 
 from swiper.cfg import REDIS
 
-
+ 
 class Redis(_Redis):
     """重写redis方法,使其可以序列化"""
     def set(self, name, value, ex=None, px=None, nx=False, xx=False):
