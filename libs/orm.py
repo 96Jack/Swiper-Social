@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+from pyexpat import model
+>>>>>>> 44333b1a6c53fa5d912371c40515edd706011d9e
 from django.db.models import query
 
 from libs.cache import  rds
@@ -28,5 +32,7 @@ def get(self, *args, **kwargs):
 def patch():
     # 保留原get方法
     query.QuerySet._get = query.QuerySet.get
+
     # 重写get方法
+
     query.QuerySet.get  = get
