@@ -62,18 +62,18 @@ class User(models.Model):
 
             self._vip = Vip.objects.get(id=self.vip_id)
         return self._vip
-
-    def to_dict(self):
-        return {
-             "id"            : self.id,
-             "phonenum "     : self.phonenum,
-             "nickname "     : self.nickname,
-             "sex      "     : self.sex,
-             # 将datetime.date 类型转换成str
-             "birth_day"     : str(self.birth_day),
-             "avatar   "     : self.avatar,
-             "location "     : self.location,
-}
+# 将to_dict方法写入对象，libs.orm.to_dict
+#     def to_dict(self):
+#         return {
+#              "id"            : self.id,
+#              "phonenum "     : self.phonenum,
+#              "nickname "     : self.nickname,
+#              "sex      "     : self.sex,
+#              # 将datetime.date 类型转换成str
+#              "birth_day"     : str(self.birth_day),
+#              "avatar   "     : self.avatar,
+#              "location "     : self.location,
+# }
 
 
 class Profile(models.Model):
@@ -89,19 +89,19 @@ class Profile(models.Model):
     only_matche       = models.BooleanField(default=True,  verbose_name='只让匹配的⼈看我的相册')
     auto_play         = models.BooleanField(default=True,  verbose_name='⾃动播放视频')
 
-    def to_dict(self):
-        return {
-            "id"                :    self.id   , 
-            "dating_sex"        :    self.dating_sex   ,         
-            "dating_location"   :    self.dating_location ,                
-            "min_dating_age"    :    self.min_dating_age ,               
-            "max_dating_age"    :    self.max_dating_age ,              
-            "min_distance"      :    self.min_distance  ,            
-            "max_distance"      :    self.max_distance  ,            
-            "vibration"         :    self.vibration     ,      
-            "only_matche"       :    self.only_matche   ,          
-            "auto_play"         :    self.auto_play     ,      
-        }
+    # def to_dict(self):
+    #     return {
+    #         "id"                :    self.id   , 
+    #         "dating_sex"        :    self.dating_sex   ,         
+    #         "dating_location"   :    self.dating_location ,                
+    #         "min_dating_age"    :    self.min_dating_age ,               
+    #         "max_dating_age"    :    self.max_dating_age ,              
+    #         "min_distance"      :    self.min_distance  ,            
+    #         "max_distance"      :    self.max_distance  ,            
+    #         "vibration"         :    self.vibration     ,      
+    #         "only_matche"       :    self.only_matche   ,          
+    #         "auto_play"         :    self.auto_play     ,      
+    #     }
     
 
 

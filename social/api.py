@@ -15,7 +15,7 @@ from vip.logics import need_permission
 def get_rcm_users(request):
     '''获取推荐用户'''
     users = logics.rcmd(request.user)
-    result = [user.to_dict() for user in users]
+    result = [user.to_dict('vip_id', 'vip_expired') for user in users]
     return render_json(result)
 
 def like(request):
@@ -50,7 +50,7 @@ def show_liked_me(request):
     '''查看谁喜欢过我'''
     user_id_list = Swiperd.who_liked_me(request.user.id)
     users = User.objects.filter(id__in=user_id_list)
-    result = [user.to_dict() for user in users]
+    result = [user.to_dict('vip_id', 'vip_expired') for user in users]
     return render_json(result)
 
 
@@ -58,6 +58,6 @@ def firend_list(request):
     '''朋友列表'''
     friend_id_list = Friend.friend_ids(request.user.id)
     users = User.objects.filter(id__in=friend_id_list)
-    result = [user.to_dict() for user in users]
+    result = [user.to_dict('vip_id', 'vip_expired') for user in users]
 
     return render_json(result)

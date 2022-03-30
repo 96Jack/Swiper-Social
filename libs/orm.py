@@ -1,4 +1,4 @@
-from statistics import mode
+from datetime import datetime, date
 from django.db.models import query
 from django.db import models
 
@@ -33,6 +33,21 @@ def save(self, force_insert=True, force_update=False, using=None, update_fields=
     key = MODEL_KEY % (self.__class__.__name__, self.pk)
     rds.set(key, self)
     
+def to_dict(self, *ignore_fields):
+    """将model模型封装成一个字典"""
+    attr_dict = {}
+    for field in self.__class__._meta.fields:
+        key = field.attname
+        value = getattr(self, key)
+        if key in ignore_fields:
+            # 跳过此次循环，不在向下执行，开始下一次循环
+            continue
+        # 特殊字段处理：birthday
+        if isinstance(value, (date, datetime)):
+            value = str(value)
+        attr_dict[key] = value
+    return attr_dict
+
 def patch():
     """通过MonkeyPatch给原ORM添加缓存处理"""
     # 保留原get方法
@@ -43,4 +58,7 @@ def patch():
     models.Model._save = models.Model.save
     # 重写save方法
     models.Model.save = save
+
+    models.Model.to_dict = to_dict
+
 

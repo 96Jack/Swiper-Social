@@ -67,7 +67,7 @@ def check_vcode(request):
         request.session['uid'] = user.id
         # 传入的数据可以被render_json序列化,code:状态码，data:返回的数据
         # 实例对象user
-        return render_json(code=stat.OK, data=user.to_dict())
+        return render_json(code=stat.OK, data=user.to_dict('vip_id', 'vip_expired'))
     else:
         raise stat.InvildVcode
 
@@ -96,7 +96,7 @@ def callback(request):
     except User.DoesNotExist:
         user = User.objects.create(**user_info)
     request.session['uid'] = user.id
-    return render_json(code=stat.OK, data=user.to_dict())
+    return render_json(code=stat.OK, data=user.to_dict('vip_id', 'vip_expired'))
     
 
 def get_profile(request):
