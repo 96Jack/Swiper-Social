@@ -40,13 +40,13 @@ def to_dict(self, *ignore_fields):
         key = field.attname
         value = getattr(self, key)
         if key in ignore_fields:
-            # 跳过此次循环，不在向下执行，开始下一次循环
+            # 跳过此次循环，执行下次循环
             continue
         # 特殊字段处理：birthday
         if isinstance(value, (date, datetime)):
             value = str(value)
         attr_dict[key] = value
-    return attr_dict
+        return attr_dict
 
 def patch():
     """通过MonkeyPatch给原ORM添加缓存处理"""
@@ -59,6 +59,6 @@ def patch():
     # 重写save方法
     models.Model.save = save
 
-    models.Model.to_dict = to_dict
+    models.Model.to_dic = to_dict
 
 

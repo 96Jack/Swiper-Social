@@ -170,3 +170,4 @@ if __name__=="__main__":
     # init_permission()
     # init_vip()
     # create_vip_perm_relations()
+ 
