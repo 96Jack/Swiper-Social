@@ -26,7 +26,7 @@ SECRET_KEY = 'hq)cfxev39@24&3^-d!z=d5^dv&t_13h^inbkpfkd%^y88#r#!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True 
 
-ALLOWED_HOSTS = ["*", '0.0.0.0:8000','123.57.232.108','172.17.19.80']
+ALLOWED_HOSTS = ["*", '124.220.30.68']
 
 
 # Application definition
@@ -83,7 +83,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'swiper',
-        'HOST': '172.17.19.80',
+        'HOST': '10.0.4.2',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': '12345678'
@@ -102,7 +102,7 @@ DATABASES = {
 CACHES = {
     'default':{
         'BACKEND':'django_redis.cache.RedisCache',
-        'LOCATION':'redis://172.17.19.80/6379/3',
+        'LOCATION':'redis://127.0.0.1/3',
         'OPTIONS':{
             'CLIENT_CLASS':"django_redis.client.DefaultClient",
             'PICKLE_VERSION':-1,

@@ -8,7 +8,7 @@ from urllib.parse import urlencode
 # Redis的相关配置
 
 REDIS = {
-        'host': '172.17.19.80',
+        'host': '127.0.0.1',
         'port': 6379,
         'db'  : 3
 
