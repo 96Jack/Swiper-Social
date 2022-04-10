@@ -59,6 +59,6 @@ def patch():
     # 重写save方法
     models.Model.save = save
 
-    models.Model.to_dic = to_dict
+    models.Model.to_dict = to_dict
 
 

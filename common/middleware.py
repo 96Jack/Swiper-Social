@@ -32,7 +32,7 @@ class AuthorizeMiddleware(MiddlewareMixin):
             
         uid = request.session.get('uid')
         if not uid:
-            return JsonResponse({'code': stat.LOGIN_REQUIRED, 'data': None})
+            return JsonResponse({'code': stat.LoginRequired, 'data': None})
         # 获取当前用户：将用户信息绑定到request上，api接口通过request获取用户信息
         request.user = User.objects.get(id=uid)
 
