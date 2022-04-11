@@ -104,11 +104,14 @@ def get_profile(request):
     # 中间件+@property+用户资料绑定在实例上
     key = PROFILE_KEY % request.user.id
     profile_data = rds.get(key) # 先从缓存中获取数据：第一次从数据库中获取数据，此后从缓存中获取数据
+    
+
+
     print("先从缓存中获取数据:%s" % profile_data)
 
     if profile_data is None:
         # 如果缓存中没有从数据库中取
-        profile_data = request.user.profile.to_dict()
+        profile_data = request.user.to_dict('vip_id', 'vip_expired')
         # 将取出的数据添加到缓存
         print("从数据库中获取数据: %s" % profile_data)
         rds.set(key, profile_data)
@@ -133,17 +136,20 @@ def set_profile(request):
     user = request.user
     # 保存用户数据，表单的所有数据保存在cleaned_data 里面
     user.__dict__.update(user_form.cleaned_data)
-    user.save()
+    # user.save()
+    user._save()
 
     # 保存交友资料数据
     user.profile.__dict__.update(profile_form.cleaned_data)
-    user.profile.save()
+    # user.profile.save()
+    user.profile._save()
+
     # user.profile.__dict__.update(profile_form.cleaned_data)
     # user.profile.save()
 
     # 修改缓存
     key = key = PROFILE_KEY % request.user.id
-    rds.set(key, user.profile.to_dict())
+    rds.set(key, user.to_dict('vip_id', 'vip_expired'))
     
     return render_json()
 

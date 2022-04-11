@@ -15,6 +15,7 @@ from common import stat
 def rcmd(user):
     '''推荐可滑动的用户'''
     profile = user.profile
+    print("profile:{}".format(profile.dating_sex))
     today = datetime.date.today()
 
     # 最早出生的日期
@@ -36,19 +37,22 @@ def rcmd(user):
     # 使用Redis取出
     superliked_me_id_list = [int(uid) for uid in rds.zrange(SUPERLIKED_KEY % user.id , 0, 19)]
     superliked_me_users = User.objects.filter(id__in=superliked_me_id_list)
+    print("superliked_me_users:{}".format(superliked_me_users))
 
     # 筛选出匹配的用户; 排除已经滑过的用户
     other_count = 20 - len(superliked_me_users)
+    print("other_count:{}".format(other_count))
     if other_count > 0:
-        other_users = User.objects.filter(
-            sex=profile.dating_sex,
-            location=profile.dating_location,
-            birth_day__gte=earliest_birthday,
-            birth_day__lte=latest_birthday,
-        ).exclude(id__in=sid_list)[:other_count]             # 懒加载
-        users = superliked_me_users | other_users
+        other_users = User.objects.filter(birth_day__gte=earliest_birthday,birth_day__lte=latest_birthday).exclude(id__in=sid_list)[:other_count] 
+        # other_users = User.objects.filter(sex=profile.dating_sex, location=profile.dating_location, 
+        # birth_day__gte=earliest_birthday,birth_day__lte=latest_birthday).exclude(id__in=sid_list)[:other_count] 
+        # 懒加载
+
+        # print("other_users:{}".format(other_users))
+        users = other_users
+        # users =  superliked_me_users | other_users 
     else:
-        users = superliked_me_users
+        users = superliked_me_users  
     return users
 
 def like_someone(user, sid):

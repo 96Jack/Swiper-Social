@@ -38,6 +38,7 @@ def to_dict(self, *ignore_fields):
     attr_dict = {}
     for field in self.__class__._meta.fields:
         key = field.attname
+        # print("key:{}".format(key))
         value = getattr(self, key)
         if key in ignore_fields:
             # 跳过此次循环，执行下次循环
@@ -46,7 +47,7 @@ def to_dict(self, *ignore_fields):
         if isinstance(value, (date, datetime)):
             value = str(value)
         attr_dict[key] = value
-        return attr_dict
+    return attr_dict
 
 def patch():
     """通过MonkeyPatch给原ORM添加缓存处理"""
