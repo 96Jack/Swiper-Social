@@ -12,7 +12,7 @@ def get(self, *args, **kwargs):
     if pk is not None:
         key = MODEL_KEY % (self.model.__name__, pk)
         model_obj = rds.get(key)
-        if isinstance(model_obj, self.model):
+        if isinstance(model_obj, self.model): 
             # print("从缓存中获取model: %s" % model_obj)
             return model_obj
 

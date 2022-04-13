@@ -137,18 +137,18 @@ def set_profile(request):
     # 保存用户数据，表单的所有数据保存在cleaned_data 里面
     user.__dict__.update(user_form.cleaned_data)
     # user.save()
-    user._save()
+    user.save()
 
     # 保存交友资料数据
     user.profile.__dict__.update(profile_form.cleaned_data)
     # user.profile.save()
-    user.profile._save()
+    user.profile.save()
 
     # user.profile.__dict__.update(profile_form.cleaned_data)
     # user.profile.save()
 
     # 修改缓存
-    key = key = PROFILE_KEY % request.user.id
+    key = PROFILE_KEY % request.user.id
     rds.set(key, user.to_dict('vip_id', 'vip_expired'))
     
     return render_json()

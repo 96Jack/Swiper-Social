@@ -14,14 +14,9 @@ from vip.logics import need_permission
 
 def get_rcm_users(request):
     '''获取推荐用户'''
-    # print("request.user:{}".format(request.user.nickname))
-    # print("request.user.profile:{}".format(request.user.profile.dating_sex))
-    # print("User.prifile:{}".format(User.profile))
-
     users = logics.rcmd(request.user)
-    # print("{}".format([user for user in users ]))
     result = [user.to_dict('vip_id', 'vip_expired') for user in users]
-    print("result:{}".format(result))
+    # print("result:{}".format(result))
     return render_json(result)
 
 def like(request):

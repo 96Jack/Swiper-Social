@@ -1,3 +1,4 @@
+from re import S
 import time 
 import datetime
 
@@ -15,14 +16,13 @@ from common import stat
 def rcmd(user):
     '''推荐可滑动的用户'''
     profile = user.profile
-    print("profile:{}".format(profile.dating_sex))
     today = datetime.date.today()
 
     # 最早出生的日期
     earliest_birthday = today -datetime.timedelta(profile.max_dating_age * 365)
     # 最晚出生日期
     latest_birthday = today - datetime.timedelta(profile.min_dating_age * 365)
-    print("earliest_birthday:{}\n latest_birthday:{}".format(earliest_birthday,latest_birthday))
+    # print("earliest_birthday:{}\n latest_birthday:{}".format(earliest_birthday,latest_birthday))
 
     # 取出滑过的用户; flat=True将元组转化成列表
     sid_list = Swiperd.objects.filter(uid=user.id).values_list('sid', flat=True)
@@ -37,22 +37,23 @@ def rcmd(user):
     # 使用Redis取出
     superliked_me_id_list = [int(uid) for uid in rds.zrange(SUPERLIKED_KEY % user.id , 0, 19)]
     superliked_me_users = User.objects.filter(id__in=superliked_me_id_list)
-    print("superliked_me_users:{}".format(superliked_me_users))
 
     # 筛选出匹配的用户; 排除已经滑过的用户
     other_count = 20 - len(superliked_me_users)
-    print("other_count:{}".format(other_count))
     if other_count > 0:
-        other_users = User.objects.filter(birth_day__gte=earliest_birthday,birth_day__lte=latest_birthday).exclude(id__in=sid_list)[:other_count] 
-        # other_users = User.objects.filter(sex=profile.dating_sex, location=profile.dating_location, 
-        # birth_day__gte=earliest_birthday,birth_day__lte=latest_birthday).exclude(id__in=sid_list)[:other_count] 
+        other_users = User.objects.filter(sex=profile.dating_sex, 
+                                          location=profile.dating_location, 
+                                          birth_day__gte=earliest_birthday,
+                                          birth_day__lte=latest_birthday
+        ).exclude(id__in=sid_list)[:other_count] 
         # 懒加载
-
-        # print("other_users:{}".format(other_users))
-        users = other_users
-        # users =  superliked_me_users | other_users 
+        if len(superliked_me_users) == 0:
+            users = other_users
+        else:
+            users =  other_users.union(superliked_me_users)
     else:
         users = superliked_me_users  
+    print("num_rcm_users:{}".format(len(users)))
     return users
 
 def like_someone(user, sid):
@@ -95,6 +96,7 @@ def dislike_someone(user, sid):
     rds.zrem(SUPERLIKED_KEY % user.id, sid )
 
 def rewind_swiped(user):
+    
     """反悔一次滑动记录"""
     # 1.获取当天的反悔次数
     rewind_times = rds.get(REWIND_KEY  % user.id, 0)
