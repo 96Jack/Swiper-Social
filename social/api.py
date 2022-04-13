@@ -11,7 +11,6 @@ from vip.logics import need_permission
 
 
 
-
 def get_rcm_users(request):
     '''获取推荐用户'''
     users = logics.rcmd(request.user)
