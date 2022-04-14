@@ -61,3 +61,5 @@ def firend_list(request):
     result = [user.to_dict('vip_id', 'vip_expired') for user in users]
 
     return render_json(result)
+
+
