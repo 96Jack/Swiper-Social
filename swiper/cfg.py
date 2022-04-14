@@ -11,8 +11,13 @@ REDIS = {
         'host': '127.0.0.1',
         'port': 6379,
         'db'  : 3
+}
 
-
+# 滑动积分配置
+SWIPER_SCORE = {
+        'like': 5,
+        'superlike': 7,
+        'dislike': -5
 }
 
 # 反悔相关的配置

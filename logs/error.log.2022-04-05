@@ -1,0 +1,14 @@
+2022-04-08 13:24:19 ERROR [10538-Thread-1]middleware.process_exception line 43: LogicError [1001] InvildVcode
+2022-04-08 13:27:48 ERROR [11439-Thread-1]middleware.process_exception line 43: LogicError [1001] InvildVcode
+2022-04-08 13:54:58 ERROR [16699-Thread-1]middleware.process_exception line 43: LogicError [1001] InvildVcode
+2022-04-10 11:47:09 ERROR [9498-Thread-4]middleware.process_exception line 43: LogicError [1011] Permissionlimit
+2022-04-10 11:48:18 ERROR [9498-Thread-9]middleware.process_exception line 43: LogicError [1011] Permissionlimit
+2022-04-11 09:37:36 ERROR [20608-Thread-5]middleware.process_exception line 43: LogicError [1011] Permissionlimit
+2022-04-11 09:38:15 ERROR [20608-Thread-7]middleware.process_exception line 43: LogicError [1011] Permissionlimit
+2022-04-11 09:56:17 ERROR [24269-Thread-4]middleware.process_exception line 43: LogicError [1011] Permissionlimit
+2022-04-11 09:56:39 ERROR [26721-Thread-1]middleware.process_exception line 43: LogicError [1011] Permissionlimit
+2022-04-11 10:07:31 ERROR [30297-Thread-1]middleware.process_exception line 43: LogicError [1011] Permissionlimit
+2022-04-11 10:10:29 ERROR [30297-Thread-5]middleware.process_exception line 43: LogicError [1008] SwiperRepeatError
+2022-04-11 10:12:45 ERROR [30297-Thread-7]middleware.process_exception line 43: LogicError [1008] SwiperRepeatError
+2022-04-11 10:12:53 ERROR [30297-Thread-8]middleware.process_exception line 43: LogicError [1008] SwiperRepeatError
+2022-04-11 10:16:44 ERROR [30297-Thread-28]middleware.process_exception line 43: LogicError [1008] SwiperRepeatError

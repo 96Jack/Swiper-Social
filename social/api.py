@@ -8,6 +8,7 @@ from social.models import Swiperd
 from social.models import Friend
 from user.models import User
 from vip.logics import need_permission
+from social.logics import set_score
 
 
 
@@ -18,10 +19,12 @@ def get_rcm_users(request):
     # print("result:{}".format(result))
     return render_json(result)
 
+
 def like(request):
     '''右滑-喜欢'''
     sid = int(request.POST.get('sid'))
     is_matched = logics.like_someone(request.user, sid)
+    set_score(sid, 'like')
     return render_json({'matched':is_matched})
     
 @need_permission
@@ -29,6 +32,7 @@ def superlike(request):
     '''上滑-超级喜欢'''
     sid = int(request.POST.get('sid'))
     is_matched = logics.superlike_someone(request.user, sid)
+    set_score(sid, 'superlike')
     return render_json({'matched':is_matched})
     
 
@@ -36,7 +40,7 @@ def dislike(request):
     '''左滑-不喜欢'''
     sid = int(request.POST.get('sid'))
     logics.dislike_someone(request.user, sid)
-    
+    set_score(sid, 'dislike')
     return render_json()
 
 @need_permission
@@ -53,7 +57,6 @@ def show_liked_me(request):
     result = [user.to_dict('vip_id', 'vip_expired') for user in users]
     return render_json(result)
 
-
 def firend_list(request):
     '''朋友列表'''
     friend_id_list = Friend.friend_ids(request.user.id)
@@ -61,5 +64,6 @@ def firend_list(request):
     result = [user.to_dict('vip_id', 'vip_expired') for user in users]
 
     return render_json(result)
+
 
 

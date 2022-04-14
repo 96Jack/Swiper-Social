@@ -10,6 +10,7 @@ from user.models import User
 from social.models import Friend, Swiperd
 from swiper import cfg
 from common import stat
+from common import keys
 
 
 
@@ -124,9 +125,21 @@ def rewind_swiped(user):
 
     # 6.删除滑动记录
     latest_swiped.delete()
+
+    # 还原用户的滑动记录
+    score = -cfg.SWIPER_SCORE[latest_swiped.stype]
+    rds.zincrby(keys.HOT_RANK_KEY, score, latest_swiped.sid)
+
     # 7.更新当天的滑动次数,同时设置过期时间到下一个凌晨
     next_zero = datetime.datetime(now.year, now.month, now.day) + datetime.timedelta(1)
     remain_seconds = (next_zero - now).total_seconds()
     print("next_zero:{}\n now:{}\n".format(next_zero ,now))
     print(' int(remain_seconds): :::::::::',  int(remain_seconds))
     rds.set(REWIND_KEY  % user.id, rewind_times + 1, int(remain_seconds))
+
+def set_score(uid, stype):
+    """给用户设置滑动积分"""
+    score = cfg.SWIPER_SCORE[stype]
+    rds.zincrby(keys.HOT_RANK_KEY, score, uid)
+
+
