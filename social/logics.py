@@ -142,4 +142,25 @@ def set_score(uid, stype):
     score = cfg.SWIPER_SCORE[stype]
     rds.zincrby(keys.HOT_RANK_KEY, score, uid)
 
+def top_n(num):
+    """取出排行榜前N的用户信息"""
+    # 从Redis中取出排行数据
+    rank_data = rds.zrevrange(keys.HOT_RANK_KEY, 0, num - 1, withscores=True)
+    # 对数据进行简单重洗
+    cleaned = [[int(uid), int(score)] for uid, score in rank_data]
 
+    # 取出用户数据
+    uid_list = [uid for uid, _ in cleaned]
+    users = User.objects.filter(id__in=uid_list)
+    users = sorted(users, key=lambda user: uid_list.index(user.id))
+
+    # 组装返回值
+    result = {}
+    ignore_fields = ["phonenum","sex","birth_day","location","vip_id","vip_expired"]
+    # enumerate: 带索引的返回值
+    for indx, user in enumerate(users):
+        score = cleaned[indx][1]
+        u_dict = user.to_dict(*ignore_fields)
+        u_dict['score'] = score
+        result[indx + 1] = u_dict
+    return result

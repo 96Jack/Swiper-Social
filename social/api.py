@@ -65,5 +65,7 @@ def firend_list(request):
 
     return render_json(result)
 
-
-
+def hot_rank(request):
+    """用户积分排行榜"""
+    rank_data = logics.top_n(50)
+    return render_json(rank_data)
