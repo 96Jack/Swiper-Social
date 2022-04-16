@@ -1,7 +1,8 @@
 # Create your views here.
 
-from pydoc import render_doc
-from unittest import result
+from django.http import JsonResponse
+
+
 from libs.http import render_json
 from social import logics
 from social.models import Swiperd
@@ -68,4 +69,5 @@ def firend_list(request):
 def hot_rank(request):
     """用户积分排行榜"""
     rank_data = logics.top_n(50)
+    # return JsonResponse(rank_data)
     return render_json(rank_data)

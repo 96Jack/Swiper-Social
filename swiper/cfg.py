@@ -50,7 +50,7 @@ YZX_ARGS = {
 # http://www.example.com/response&response_type=code
 WB_APP_KEY = "3474883573"
 WB_APP_SECRET = "c61135248ab7f3a30e121f95c0e68dfe"
-WB_CALLBACK = "http://123.57.232.108:8000/weibo/callback"
+WB_CALLBACK = "http://124.220.30.68:8000/weibo/callback"
 
 # 第一步： Authorize 接口：第三方登录微博
 
