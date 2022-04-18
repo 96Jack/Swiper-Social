@@ -36,11 +36,11 @@ class AuthorizeMiddleware(MiddlewareMixin):
         # 获取当前用户：将用户信息绑定到request上，api接口通过request获取用户信息
         request.user = User.objects.get(id=uid)
 
-class LogicErrMiddleware(MiddlewareMixin):
-    """逻辑异常处理中间件"""
-    def process_exception(self, request, exception):
-        if isinstance(exception, stat.LogicErr):
-            err_log.error('LogicError [%s] %s'% (exception.code, exception.data))
-            return render_json(data=exception.data, code=exception.code)
+# class LogicErrMiddleware(MiddlewareMixin):
+#     """逻辑异常处理中间件"""
+#     def process_exception(self, request, exception):
+#         if isinstance(exception, stat.LogicErr):
+#             err_log.error('LogicError [%s] %s'% (exception.code, exception.data))
+#             return render_json(data=exception.data, code=exception.code)
         
 
