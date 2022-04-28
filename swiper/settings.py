@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
-from imp import cache_from_source
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -103,7 +102,7 @@ DATABASES = {
 CACHES = {
     'default':{
         'BACKEND':'django_redis.cache.RedisCache',
-        'LOCATION':'redis://127.0.0.1/3',
+        'LOCATION':'redis://172.18.0.1/3',
         'OPTIONS':{
             'CLIENT_CLASS':"django_redis.client.DefaultClient",
             'PICKLE_VERSION':-1,

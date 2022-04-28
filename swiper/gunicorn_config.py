@@ -6,7 +6,6 @@ bind = ['10.0.4.2:8000']
 daemon = True
 pidfile = "logs/gunicorn.pid"
 
-
 # 工作进程数量
 workers = cpu_count() * 2
 # 指定异步处理库：在gunicorn内部已经封装好gevent相关的东西

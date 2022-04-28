@@ -29,7 +29,6 @@ class AuthorizeMiddleware(MiddlewareMixin):
     def process_request(self, request):
         if request.path in self.WHITE_LIST:
             return
-            
         uid = request.session.get('uid')
         if not uid:
             return JsonResponse({'code': stat.LoginRequired, 'data': None})
@@ -43,4 +42,3 @@ class AuthorizeMiddleware(MiddlewareMixin):
 #             err_log.error('LogicError [%s] %s'% (exception.code, exception.data))
 #             return render_json(data=exception.data, code=exception.code)
         
-

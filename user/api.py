@@ -1,5 +1,7 @@
 # 标准库
+import json
 import logging
+
 
 
 # 第三方库
@@ -9,7 +11,6 @@ from django.core.cache import cache
 
 # 自定义的库
 from common import keys
-from libs.qn_cloud import upload_to_qn
 from user import logics
 from common import stat
 from user.froms import ProfileForm, UserForm
@@ -29,8 +30,8 @@ inf_log = logging.getLogger('inf')
 def get_vcode(request):
     '''获取短信验证码'''
     # 字典.get()取值，取不到不报错
-    # request.GET
-    # request.POST
+    # request.GET : 获取浏览器请求url的参数
+    # request.POST ：浏览器端向服务端提交参数
     # request.COOKIES ： 由浏览器传送到服务器
     # request.session ： 服务器传送
     # request.FILED
@@ -77,6 +78,7 @@ def wb_auth(request):
 
 def callback(request):
     """"微博回调接口"""
+    # code用于第二步调用oauth2/access_token接口，获取授权后的access token
     code = request.GET.get('code')
     # 获取授权令牌
     # print("access_code",code)
@@ -104,11 +106,7 @@ def get_profile(request):
     # 中间件+@property+用户资料绑定在实例上
     key = PROFILE_KEY % request.user.id
     profile_data = rds.get(key) # 先从缓存中获取数据：第一次从数据库中获取数据，此后从缓存中获取数据
-    
-
-
     print("先从缓存中获取数据:%s" % profile_data)
-
     if profile_data is None:
         # 如果缓存中没有从数据库中取
         profile_data = request.user.to_dict('vip_id', 'vip_expired')
@@ -157,7 +155,14 @@ def upload_avatar(request):
     '''上传个人形象'''
 
     avatar = request.FILES.get('avatar')
-    
-    # 调用celery异步处理图像上传
-    logics.handle_avatar.delay(request.user, avatar)
+    filename = 'Avatar-%s' % request.user.id
+    filepath = '/tmp/%s' % filename
+    # 保存图片到本地
+    logics.save_upload_avatar(filepath, avatar)
+    # print("type_avatar: ++++++++++++++++++%s"% type(avatar))
+    # 调用celery异步处理图像上传至七牛云
+    logics.handle_avatar.delay(filename, filepath)
+    # logics.handle_avatar(filename, filepath)
+    # logics.handle_avatar.delay(filepath, avatar)
     return render_json()
+

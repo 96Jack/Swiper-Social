@@ -3,11 +3,13 @@ import logging
 from cgitb import reset
 from urllib import response
 from django.core.cache import cache
+from django.forms import FilePathField
 import requests
 import random
 from common import keys
 from swiper import cfg
 from tasks import celery_app
+from libs.qn_cloud import upload_to_qn
 
 inf_log = logging.getLogger('inf')
 
@@ -101,30 +103,28 @@ def get_user_info(access_token, wb_uid):
         return user_info
     return None
 
-def save_upload_avatar(user, upload_avatar):
+def save_upload_avatar(filepath,  upload_avatar):
     '''保存上传的头像'''
-    print(user.id)
-    filename = 'Avatar-%s' % user.id
-    filepath = '/tmp/%s' % filename
 
+    # upload_avatar type:  <class 'django.core.files.uploadedfile.InMemoryUploadedFile'>
+    # dir(upload_avatar) :  查看一个对象内部的属性和方法 
     with open(filepath, 'wb') as fp:
         for chunk in upload_avatar.chunks():
             fp.write(chunk)
 
-    return filename, filepath
 
 @celery_app.task
-def handle_avatar(user, upload_avatar):
+def handle_avatar(filename, filepath): 
+# def handle_avatar(filepath, avatar): 
     '''上传个人形象'''
-    # 文件保存到本地
-    filename, filepath = save_upload_avatar(user, upload_avatar)
-    print('filename:{}\n, filepath:{}\n'.format(filename, filepath))
+    # save_upload_avatar(filepath, avatar)
+    return 'local in filepath:{} file  filename:{} upload_to_niu'.format(filepath, filename)
     # # 将文件上传到七牛云
-    # avatar_url = upload_to_qn(filename, filepath);
+    # avatar_url = upload_to_qn(filename, filepath)
 
     # # 保存avatar_url
     # request.user.avatar = avatar_url
     # request.save()
 
     #删除临时文件
-    # os.remove(filepath)
+    # os.remove(filepath)  

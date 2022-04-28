@@ -17,6 +17,9 @@ class ProfileForm(forms.ModelForm):
     # 以此种方式命名比较字段函数 def clean_<field_name>
     def clean_max_dating_age(self):
         """检查最大交友年龄"""
+        """
+        检查的form字段使用is_valid(),内部调用clean()函数,调用is_valid()之后才能使用cleaned_data属性查看所有字段
+        """
         cleaned = super().clean()
         if cleaned['max_dating_age'] < cleaned['min_dating_age']:
             raise forms.ValidationError('max_dating_age 必须大于 min_dating_age')
