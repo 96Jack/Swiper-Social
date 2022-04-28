@@ -8,7 +8,7 @@ import django
 
 
 
-# 设置Django的运行环境
+# 设置Django的运行环境: 使得脚本文件可以单独运行
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'swiper.settings')
