@@ -22,6 +22,7 @@ from libs.cache import rds
 from common.keys import PROFILE_KEY
 
 
+# inf : 对应settings中LOGGING配置的loggers配置段
 inf_log = logging.getLogger('inf')
 
 
@@ -165,4 +166,3 @@ def upload_avatar(request):
     # logics.handle_avatar(filename, filepath)
     # logics.handle_avatar.delay(filepath, avatar)
     return render_json()
-

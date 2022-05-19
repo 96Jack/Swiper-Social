@@ -1,14 +1,14 @@
+# -*- encoding: utf-8 -*-
 from mimetypes import init
 import os
 import sys
 import random
 from datetime import date
-
 import django
 
 
-
 # 设置Django的运行环境: 使得脚本文件可以单独运行
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'swiper.settings')
@@ -165,8 +165,8 @@ def create_vip_perm_relations():
     VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=show_liked_me.id)
 
 
-if __name__=="__main__":
-    create_robots(10000)
+# if __name__=="__main__":
+    # create_robots(10000)
     # init_permission()
     # init_vip()
     # create_vip_perm_relations()

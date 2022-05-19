@@ -111,7 +111,7 @@ def save_upload_avatar(filepath,  upload_avatar):
     with open(filepath, 'wb') as fp:
         for chunk in upload_avatar.chunks():
             fp.write(chunk)
-
+    return "save avatar in local"
 
 @celery_app.task
 def handle_avatar(filename, filepath): 

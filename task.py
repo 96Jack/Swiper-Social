@@ -19,7 +19,7 @@ app  = Celery('my_task', broker=broker, backend=backend)
 
 @app.task
 def add(x, y):
-    time.sleep(5)
+    time.sleep(1)
     return x + y
 
 

@@ -20,7 +20,9 @@ def rcmd(user):
     today = datetime.date.today()
 
     # 最早出生的日期
+    # 日期相加减：datetime.timedelta()
     earliest_birthday = today -datetime.timedelta(profile.max_dating_age * 365)
+    
     # 最晚出生日期
     latest_birthday = today - datetime.timedelta(profile.min_dating_age * 365)
     # print("earliest_birthday:{}\n latest_birthday:{}".format(earliest_birthday,latest_birthday))
@@ -28,7 +30,7 @@ def rcmd(user):
     # 取出滑过的用户; flat=True将元组转化成列表
     sid_list = Swiperd.objects.filter(uid=user.id).values_list('sid', flat=True)
 
-    # VIP用户取出超级喜欢过自己，但是还没有被自己滑动过的用户ID： 使用ORM取出
+    # VIP用户取出超级喜欢过自己，但是还没有被自己滑动过的用户ID： 使用ORM取出 
     # -----------------------直接从数据库中取出：性能太差-------------------------
     # who_superlike_me = Swiperd.objects.filter(sid=user.id, stype='superlike')\
     #                                   .exclude(uid__in=sid_list)\

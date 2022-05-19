@@ -86,7 +86,7 @@ DATABASES = {
         'HOST': '10.0.4.2',
         'PORT': 3306,
         'USER': 'root',
-        'PASSWORD': '12345678'
+        'PASSWORD': '123456'
     }
 
 }
@@ -175,6 +175,7 @@ LOGGING = {
         },
         'info':{
             'class': 'logging.handlers.TimedRotatingFileHandler',
+            # f'variable_name' : 直接会将指定的变量内容拼进字符串
             'filename': f'{BASE_DIR}/logs/info.log', # 日志保存路径
             'when': 'D',                             # 每天切割日志
             'backupCount':30,                        # 日志的保留时间

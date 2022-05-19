@@ -23,7 +23,7 @@ class Permission(models.Model):
     desc = models.TextField(verbose_name='权限的描述')
 
 class VipPermRelation(models.Model):
-    """会员和权限的关系表 : 多对多
+    """会员和权限的关系表 : 多对多 : 另创建一个表保存多对多的关系
     关系：
         一级会员  超级喜欢
         二级会员  超级喜欢
