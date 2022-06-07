@@ -83,7 +83,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'swiper',
-        'HOST': '10.0.4.2',
+        'HOST': 'localhost',
         'PORT': 3306,
         'USER': 'root',
         'PASSWORD': '123456'
@@ -92,7 +92,7 @@ DATABASES = {
 }
 
 # 让Django使用 Redis作为缓存后端：
-#       1. pip install django-cache 
+#       1. pip install django-cache  
 #       2.freeze > requirement.txt
 # from django.core.cache import cache 此时就会用redis作为缓存使用:
 #       from django.conf import settings 查看
@@ -208,3 +208,5 @@ LOGGING = {
         }
     }
 }
+
+

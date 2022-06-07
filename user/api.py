@@ -62,7 +62,7 @@ def check_vcode(request):
         except User.DoesNotExist:
             # 如果用户不存在，直接创建用户
             user = User.objects.create(
-                phonenum=phonenum,
+                phonenum=phonenum,  
                 nickname=phonenum
             )
         inf_log.info('User(%s) login' % user.id)
@@ -148,13 +148,13 @@ def set_profile(request):
 
     # 修改缓存
     key = PROFILE_KEY % request.user.id
-    rds.set(key, user.to_dict('vip_id', 'vip_expired'))
+    rds.set(key, user('vip_id', 'vip_expired'))
     
     return render_json()
 
 def upload_avatar(request):
     '''上传个人形象'''
-
+ 
     avatar = request.FILES.get('avatar')
     filename = 'Avatar-%s' % request.user.id
     filepath = '/tmp/%s' % filename

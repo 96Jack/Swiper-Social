@@ -1,3 +1,4 @@
+from multiprocessing.pool import IMapUnorderedIterator
 from re import S
 import time 
 import datetime
@@ -150,11 +151,13 @@ def top_n(num):
     rank_data = rds.zrevrange(keys.HOT_RANK_KEY, 0, num - 1, withscores=True)
     # 对数据进行简单重洗
     cleaned = [[int(uid), int(score)] for uid, score in rank_data]
-
     # 取出用户数据
     uid_list = [uid for uid, _ in cleaned]
     users = User.objects.filter(id__in=uid_list)
+
+    # sorted(iterable, key=None)  ： 可以指定自定义函数来自定义排序
     users = sorted(users, key=lambda user: uid_list.index(user.id))
+
 
     # 组装返回值
     result = {}

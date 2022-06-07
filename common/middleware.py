@@ -23,7 +23,7 @@ class AuthorizeMiddleware(MiddlewareMixin):
     WHITE_LIST = [
         "/api/user/get_vcode",
         "/api/user/check_vcode",
-        "/weibo/wb_auth",
+        "/weibo/wb_auth", 
         "/weibo/callback",
     ]
     def process_request(self, request):

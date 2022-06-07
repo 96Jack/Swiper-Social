@@ -20,7 +20,7 @@ def get(self, *args, **kwargs):
     model_obj = self._get(*args, **kwargs)
     # print("从数据库中获取model: %s" % model_obj)
 
-    # 将取出的数据写入缓存
+    # 将取出的数据写入缓存 
     key =MODEL_KEY % (self.model.__name__, model_obj.pk)
     rds.set(key, model_obj)
     # print("将model写入缓存: %s" % model_obj)
@@ -34,18 +34,23 @@ def save(self, force_insert=True, force_update=False, using=None, update_fields=
     rds.set(key, self)
     
 def to_dict(self, *ignore_fields):
-    """将model模型封装成一个字典"""
+    """将model模型封装成一个字典
+        给QuerySet对象添加"to_dic"方法, 可以获取对象内的全部字段
+        的信息
+    """
     attr_dict = {}
     for field in self.__class__._meta.fields:
         key = field.attname
         # print("key:{}".format(key))
         value = getattr(self, key)
+
         if key in ignore_fields:
             # 跳过此次循环，执行下次循环
             continue
         # 特殊字段处理：birthday
         if isinstance(value, (date, datetime)):
             value = str(value)
+
         attr_dict[key] = value
     return attr_dict
 

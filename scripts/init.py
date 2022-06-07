@@ -165,9 +165,10 @@ def create_vip_perm_relations():
     VipPermRelation.objects.get_or_create(vip_id=vip3.id, perm_id=show_liked_me.id)
 
 
-# if __name__=="__main__":
-    # create_robots(10000)
+if __name__=="__main__":
     # init_permission()
     # init_vip()
     # create_vip_perm_relations()
+    # create_robots(1000)
+    ...
  
